@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { createClient } from '@/lib/supabase/client'
+import ImageUpload from './ImageUpload'
 
 interface SectionEditModalProps {
   sectionId: string
@@ -244,15 +245,12 @@ export default function SectionEditModal({
               </div>
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                Background Image URL
-              </label>
-              <input
-                type="url"
-                name="background_image_url"
+              <ImageUpload
                 value={formData.background_image_url || ''}
-                onChange={handleChange}
-                className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
+                onChange={(url) => setFormData({ ...formData, background_image_url: url })}
+                bucket="images"
+                folder="hero"
+                label="Background Image"
               />
             </div>
             <div className="flex items-center gap-4">
@@ -324,15 +322,12 @@ export default function SectionEditModal({
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                Image URL
-              </label>
-              <input
-                type="url"
-                name="image_url"
+              <ImageUpload
                 value={formData.image_url || ''}
-                onChange={handleChange}
-                className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
+                onChange={(url) => setFormData({ ...formData, image_url: url })}
+                bucket="images"
+                folder="about"
+                label="About Image"
               />
             </div>
             <div className="flex items-center gap-4">
@@ -460,15 +455,12 @@ export default function SectionEditModal({
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                Image URL
-              </label>
-              <input
-                type="url"
-                name="image_url"
+              <ImageUpload
                 value={formData.image_url || ''}
-                onChange={handleChange}
-                className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
+                onChange={(url) => setFormData({ ...formData, image_url: url })}
+                bucket="images"
+                folder="portfolio"
+                label="Portfolio Image"
               />
             </div>
             <div>
@@ -578,15 +570,12 @@ export default function SectionEditModal({
               </div>
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                Author Image URL
-              </label>
-              <input
-                type="url"
-                name="author_image_url"
+              <ImageUpload
                 value={formData.author_image_url || ''}
-                onChange={handleChange}
-                className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
+                onChange={(url) => setFormData({ ...formData, author_image_url: url })}
+                bucket="images"
+                folder="testimonials"
+                label="Author Image"
               />
             </div>
             <div>

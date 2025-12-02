@@ -2,6 +2,7 @@
 
 import { useState, FormEvent } from 'react'
 import { Database } from '@/lib/supabase/types'
+import ImageUpload from './ImageUpload'
 
 type SiteSettings = Database['public']['Tables']['site_settings']['Row']
 
@@ -108,43 +109,25 @@ export default function CompanyProfileForm({ initialData }: CompanyProfileFormPr
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-            Logo URL
-          </label>
-          <input
-            type="url"
-            name="logo_url"
-            value={formData.logo_url}
-            onChange={handleChange}
-            placeholder="https://example.com/logo.png"
-            className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-gray-700 dark:text-white"
+          <ImageUpload
+            value={formData.logo_url || ''}
+            onChange={(url) => setFormData({ ...formData, logo_url: url })}
+            bucket="images"
+            folder="logo"
+            label="Company Logo"
+            accept="image/*"
           />
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-            Favicon URL
-          </label>
-          <input
-            type="url"
-            name="favicon_url"
-            value={formData.favicon_url}
-            onChange={handleChange}
-            placeholder="https://example.com/favicon.ico"
-            className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-gray-700 dark:text-white"
+          <ImageUpload
+            value={formData.favicon_url || ''}
+            onChange={(url) => setFormData({ ...formData, favicon_url: url })}
+            bucket="images"
+            folder="favicon"
+            label="Favicon"
+            accept="image/x-icon,image/png,image/svg+xml"
           />
-          {formData.favicon_url && (
-            <div className="mt-2">
-              <img
-                src={formData.favicon_url}
-                alt="Favicon preview"
-                className="w-8 h-8"
-                onError={(e) => {
-                  e.currentTarget.style.display = 'none'
-                }}
-              />
-            </div>
-          )}
         </div>
       </div>
 
