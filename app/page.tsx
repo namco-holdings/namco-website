@@ -35,7 +35,11 @@ export default async function Home() {
       {heroSection && (
         <section
           id="hero"
-          className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-100 dark:from-gray-900 dark:to-gray-800 pt-20 relative"
+          className={`min-h-screen flex items-center justify-center pt-20 relative ${
+            heroSection.background_image_url
+              ? ''
+              : 'bg-gradient-to-br from-blue-50 to-indigo-100 dark:from-gray-900 dark:to-gray-800'
+          }`}
           style={
             heroSection.background_image_url
               ? {
