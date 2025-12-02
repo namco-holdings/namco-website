@@ -28,6 +28,8 @@ export default function CompanyProfileForm({ initialData }: CompanyProfileFormPr
     accent_color_hover: initialData.accent_color_hover || initialData.secondary_color || '#1e40af',
     border_color: initialData.border_color || '#e5e7eb',
     border_color_dark: initialData.border_color_dark || '#374151',
+    header_background_color: initialData.header_background_color || '#ffffff',
+    header_text_color: initialData.header_text_color || '#171717',
     contact_email: initialData.contact_email || '',
     contact_phone: initialData.contact_phone || '',
     contact_address: initialData.contact_address || '',
@@ -383,6 +385,58 @@ export default function CompanyProfileForm({ initialData }: CompanyProfileFormPr
                 type="text"
                 name="border_color_dark"
                 value={formData.border_color_dark}
+                onChange={handleChange}
+                className="flex-1 px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-gray-700 dark:text-white"
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6 space-y-6">
+        <h2 className="text-xl font-semibold text-gray-900 dark:text-white">
+          Header Settings
+        </h2>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div>
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+              Header Background Color
+            </label>
+            <div className="flex gap-2">
+              <input
+                type="color"
+                name="header_background_color"
+                value={formData.header_background_color}
+                onChange={handleChange}
+                className="w-16 h-10 border border-gray-300 dark:border-gray-600 rounded"
+              />
+              <input
+                type="text"
+                name="header_background_color"
+                value={formData.header_background_color}
+                onChange={handleChange}
+                className="flex-1 px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-gray-700 dark:text-white"
+              />
+            </div>
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+              Header Text Color
+            </label>
+            <div className="flex gap-2">
+              <input
+                type="color"
+                name="header_text_color"
+                value={formData.header_text_color}
+                onChange={handleChange}
+                className="w-16 h-10 border border-gray-300 dark:border-gray-600 rounded"
+              />
+              <input
+                type="text"
+                name="header_text_color"
+                value={formData.header_text_color}
                 onChange={handleChange}
                 className="flex-1 px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-gray-700 dark:text-white"
               />

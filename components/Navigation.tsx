@@ -20,6 +20,9 @@ export default async function Navigation() {
   return (
     <NavigationClient
       companyName={siteSettings.company_name}
+      logoUrl={siteSettings.logo_url}
+      headerBackgroundColor={siteSettings.header_background_color || '#ffffff'}
+      headerTextColor={siteSettings.header_text_color || '#171717'}
       navItems={navItems.length > 0 ? navItems : defaultNavItems}
     />
   )

@@ -10,20 +10,20 @@ interface NavigationItem {
 
 interface NavigationProps {
   companyName: string
+  logoUrl: string | null
+  headerBackgroundColor: string
+  headerTextColor: string
   navItems: NavigationItem[]
 }
 
-export default function NavigationClient({ companyName, navItems }: NavigationProps) {
-  const [isScrolled, setIsScrolled] = useState(false)
+export default function NavigationClient({ 
+  companyName, 
+  logoUrl,
+  headerBackgroundColor,
+  headerTextColor,
+  navItems 
+}: NavigationProps) {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
-
-  useEffect(() => {
-    const handleScroll = () => {
-      setIsScrolled(window.scrollY > 20)
-    }
-    window.addEventListener('scroll', handleScroll)
-    return () => window.removeEventListener('scroll', handleScroll)
-  }, [])
 
   const scrollToSection = (id: string) => {
     const element = document.getElementById(id)
@@ -35,29 +35,42 @@ export default function NavigationClient({ companyName, navItems }: NavigationPr
 
   return (
     <nav
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-        isScrolled
-          ? 'bg-white/95 dark:bg-gray-900/95 backdrop-blur-sm shadow-md'
-          : 'bg-transparent'
-      }`}
+      className="fixed top-0 left-0 right-0 z-50 shadow-md"
+      style={{
+        backgroundColor: headerBackgroundColor,
+        color: headerTextColor,
+      }}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16 md:h-20">
           <div className="flex-shrink-0">
             <button
               onClick={() => scrollToSection('hero')}
-              className="text-2xl md:text-3xl font-bold text-gray-900 dark:text-white transition-colors"
-              style={{
-                color: 'var(--text-color)',
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.color = 'var(--accent-color)'
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.color = 'var(--text-color)'
-              }}
+              className="flex items-center transition-opacity hover:opacity-80"
             >
-              {companyName}
+              {logoUrl ? (
+                <img
+                  src={logoUrl}
+                  alt={companyName}
+                  className="h-10 md:h-12 w-auto"
+                  onError={(e) => {
+                    // Fallback to text if image fails to load
+                    const img = e.currentTarget
+                    const parent = img.parentElement
+                    if (parent) {
+                      img.style.display = 'none'
+                      const textFallback = parent.querySelector('span') as HTMLElement
+                      if (textFallback) textFallback.style.display = 'block'
+                    }
+                  }}
+                />
+              ) : null}
+              <span
+                className={`text-2xl md:text-3xl font-bold ${logoUrl ? 'hidden' : 'block'}`}
+                style={{ color: headerTextColor }}
+              >
+                {companyName}
+              </span>
             </button>
           </div>
 
@@ -67,15 +80,15 @@ export default function NavigationClient({ companyName, navItems }: NavigationPr
               <button
                 key={item.id}
                 onClick={() => scrollToSection(item.section_id)}
-                className="text-gray-700 dark:text-gray-300 transition-colors font-medium"
+                className="transition-colors font-medium hover:opacity-70"
                 style={{
-                  color: 'var(--text-color)',
+                  color: headerTextColor,
                 }}
                 onMouseEnter={(e) => {
                   e.currentTarget.style.color = 'var(--accent-color)'
                 }}
                 onMouseLeave={(e) => {
-                  e.currentTarget.style.color = 'var(--text-color)'
+                  e.currentTarget.style.color = headerTextColor
                 }}
               >
                 {item.label}
@@ -86,7 +99,8 @@ export default function NavigationClient({ companyName, navItems }: NavigationPr
           {/* Mobile Menu Button */}
           <button
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-            className="md:hidden text-gray-700 dark:text-gray-300 focus:outline-none"
+            className="md:hidden focus:outline-none"
+            style={{ color: headerTextColor }}
             aria-label="Toggle menu"
           >
             <svg
@@ -109,12 +123,13 @@ export default function NavigationClient({ companyName, navItems }: NavigationPr
 
         {/* Mobile Navigation */}
         {isMobileMenuOpen && (
-          <div className="md:hidden py-4 space-y-2">
+          <div className="md:hidden py-4 space-y-2 border-t" style={{ borderColor: 'rgba(0,0,0,0.1)' }}>
             {navItems.map((item) => (
               <button
                 key={item.id}
                 onClick={() => scrollToSection(item.section_id)}
-                className="block w-full text-left px-4 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-md transition-colors"
+                className="block w-full text-left px-4 py-2 rounded-md transition-colors hover:opacity-70"
+                style={{ color: headerTextColor }}
               >
                 {item.label}
               </button>

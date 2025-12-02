@@ -26,6 +26,8 @@ export interface Database {
           accent_color_hover: string | null
           border_color: string | null
           border_color_dark: string | null
+          header_background_color: string | null
+          header_text_color: string | null
           contact_email: string | null
           contact_phone: string | null
           contact_address: string | null
@@ -52,6 +54,8 @@ export interface Database {
           accent_color_hover?: string | null
           border_color?: string | null
           border_color_dark?: string | null
+          header_background_color?: string | null
+          header_text_color?: string | null
           contact_email?: string | null
           contact_phone?: string | null
           contact_address?: string | null
@@ -78,6 +82,8 @@ export interface Database {
           accent_color_hover?: string | null
           border_color?: string | null
           border_color_dark?: string | null
+          header_background_color?: string | null
+          header_text_color?: string | null
           contact_email?: string | null
           contact_phone?: string | null
           contact_address?: string | null

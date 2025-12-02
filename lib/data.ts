@@ -27,6 +27,8 @@ const DEFAULT_SITE_SETTINGS: SiteSettings = {
   accent_color_hover: '#1e40af',
   border_color: '#e5e7eb',
   border_color_dark: '#374151',
+  header_background_color: '#ffffff',
+  header_text_color: '#171717',
   contact_email: null,
   contact_phone: null,
   contact_address: null,

@@ -35,11 +35,12 @@ export default async function Home() {
       {heroSection && (
         <section
           id="hero"
-          className={`min-h-screen flex items-center justify-center pt-20 relative ${
+          className={`min-h-screen flex items-center justify-center relative ${
             heroSection.background_image_url
               ? ''
               : 'bg-gradient-to-br from-blue-50 to-indigo-100 dark:from-gray-900 dark:to-gray-800'
           }`}
+          style={{ paddingTop: '80px', scrollMarginTop: '80px' }} // Space for fixed header
           style={
             heroSection.background_image_url
               ? {
@@ -118,7 +119,7 @@ export default async function Home() {
 
       {/* About Section */}
       {aboutSection && (
-        <section id="about" className="py-20 bg-white dark:bg-gray-900">
+        <section id="about" className="py-20 bg-white dark:bg-gray-900 scroll-mt-20">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center mb-16">
               <h2 className="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white mb-4">
@@ -155,7 +156,7 @@ export default async function Home() {
 
       {/* Services Section */}
       {services.length > 0 && (
-        <section id="services" className="py-20 bg-gray-50 dark:bg-gray-800">
+        <section id="services" className="py-20 bg-gray-50 dark:bg-gray-800 scroll-mt-20">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center mb-16">
               <h2 className="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white mb-4">
@@ -189,7 +190,7 @@ export default async function Home() {
 
       {/* Portfolio Section */}
       {portfolioItems.length > 0 && (
-        <section id="portfolio" className="py-20 bg-white dark:bg-gray-900">
+        <section id="portfolio" className="py-20 bg-white dark:bg-gray-900 scroll-mt-20">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center mb-16">
               <h2 className="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white mb-4">
@@ -245,7 +246,7 @@ export default async function Home() {
 
       {/* Testimonials Section */}
       {testimonials.length > 0 && (
-        <section id="testimonials" className="py-20 bg-gray-50 dark:bg-gray-800">
+        <section id="testimonials" className="py-20 bg-gray-50 dark:bg-gray-800 scroll-mt-20">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center mb-16">
               <h2 className="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white mb-4">
@@ -290,7 +291,7 @@ export default async function Home() {
       )}
 
       {/* Contact Section */}
-      <section id="contact" className="py-20 bg-white dark:bg-gray-900">
+      <section id="contact" className="py-20 bg-white dark:bg-gray-900 scroll-mt-20">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
             <h2 className="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white mb-4">
