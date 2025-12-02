@@ -53,19 +53,38 @@ export default async function Home() {
               : {}),
           }}
         >
-          {/* Background Overlay - Only render if opacity is explicitly greater than 0 */}
-          {heroSection.background_image_url && 
-           heroSection.background_overlay_opacity != null &&
-           typeof heroSection.background_overlay_opacity === 'number' &&
-           heroSection.background_overlay_opacity > 0 ? (
-            <div
-              className="absolute inset-0 pointer-events-none z-0"
-              style={{
-                backgroundColor: heroSection.background_overlay_color || '#000000',
-                opacity: heroSection.background_overlay_opacity,
-              }}
-            />
-          ) : null}
+          {/* Background Overlay - Completely removed from DOM when opacity is 0 */}
+          {(() => {
+            // Convert to number and validate
+            const opacityValue = heroSection.background_overlay_opacity
+            const opacityNum = opacityValue == null ? 0 : Number(opacityValue)
+            
+            // Strict validation: only render if we have image, valid number, and > 0
+            const shouldRenderOverlay = 
+              Boolean(heroSection.background_image_url) &&
+              opacityValue !== null &&
+              opacityValue !== undefined &&
+              !isNaN(opacityNum) &&
+              opacityNum > 0 &&
+              opacityNum <= 1
+            
+            // Return null to completely remove from DOM if overlay shouldn't render
+            if (!shouldRenderOverlay) {
+              return null
+            }
+            
+            // Render overlay only when explicitly needed
+            return (
+              <div
+                className="absolute inset-0 pointer-events-none z-0"
+                style={{
+                  backgroundColor: heroSection.background_overlay_color || '#000000',
+                  opacity: opacityNum,
+                }}
+                aria-hidden="true"
+              />
+            )
+          })()}
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 text-center relative z-10" style={{ position: 'relative' }}>
             <div 
               className="text-5xl md:text-7xl font-bold mb-6"
