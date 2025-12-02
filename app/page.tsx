@@ -46,13 +46,16 @@ export default async function Home() {
               : undefined
           }
         >
-          {/* Background Overlay */}
-          {heroSection.background_image_url && (
+          {/* Background Overlay - Only show if opacity > 0 */}
+          {heroSection.background_image_url && 
+           heroSection.background_overlay_opacity !== null && 
+           heroSection.background_overlay_opacity !== undefined &&
+           Number(heroSection.background_overlay_opacity) > 0 && (
             <div
-              className="absolute inset-0"
+              className="absolute inset-0 pointer-events-none"
               style={{
                 backgroundColor: heroSection.background_overlay_color || '#000000',
-                opacity: heroSection.background_overlay_opacity || 0.3,
+                opacity: Number(heroSection.background_overlay_opacity),
               }}
             />
           )}

@@ -40,7 +40,7 @@ export default function SectionEditModal({
           secondary_cta_link: '#about',
           background_image_url: '',
           background_overlay_color: '#000000',
-          background_overlay_opacity: 0.3,
+          background_overlay_opacity: 0,
           enabled: true,
           display_order: 0,
         })
@@ -284,7 +284,7 @@ export default function SectionEditModal({
                   </div>
                   <div>
                     <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                      Overlay Opacity: {((formData.background_overlay_opacity || 0) * 100).toFixed(0)}%
+                      Overlay Opacity: {((formData.background_overlay_opacity ?? 0) * 100).toFixed(0)}%
                     </label>
                     <input
                       type="range"
@@ -292,7 +292,7 @@ export default function SectionEditModal({
                       min="0"
                       max="1"
                       step="0.05"
-                      value={formData.background_overlay_opacity || 0.3}
+                      value={formData.background_overlay_opacity ?? 0}
                       onChange={handleChange}
                       className="w-full"
                     />
@@ -301,6 +301,11 @@ export default function SectionEditModal({
                       <span>50%</span>
                       <span>100% (Solid)</span>
                     </div>
+                    <p className="text-xs text-gray-500 dark:text-gray-400 mt-2">
+                      {formData.background_overlay_opacity === 0 || formData.background_overlay_opacity === null
+                        ? 'Overlay is disabled (0% opacity)'
+                        : `Overlay will be visible at ${((formData.background_overlay_opacity || 0) * 100).toFixed(0)}% opacity`}
+                    </p>
                   </div>
                 </div>
                 <div className="mt-2 p-3 bg-white dark:bg-gray-800 rounded border border-gray-200 dark:border-gray-600">
