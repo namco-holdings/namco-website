@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { createClient } from '@/lib/supabase/client'
+import SectionEditModal from './SectionEditModal'
 
 interface Section {
   id: string
@@ -289,31 +290,4 @@ export default function SectionsManager() {
   )
 }
 
-function SectionEditModal({
-  sectionId,
-  sectionType,
-  onClose,
-}: {
-  sectionId: string
-  sectionType: string
-  onClose: () => void
-}) {
-  // This would be a full edit form - simplified for now
-  return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-      <div className="bg-white dark:bg-gray-800 rounded-lg p-6 max-w-2xl w-full max-h-[90vh] overflow-y-auto">
-        <h3 className="text-xl font-semibold mb-4">Edit Section</h3>
-        <p className="text-gray-600 dark:text-gray-400 mb-4">
-          Full edit form would go here for {sectionType} section (ID: {sectionId})
-        </p>
-        <button
-          onClick={onClose}
-          className="px-4 py-2 bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200 rounded hover:bg-gray-300 dark:hover:bg-gray-600"
-        >
-          Close
-        </button>
-      </div>
-    </div>
-  )
-}
 
