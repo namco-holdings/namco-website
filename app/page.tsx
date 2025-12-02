@@ -40,16 +40,17 @@ export default async function Home() {
               ? ''
               : 'bg-gradient-to-br from-blue-50 to-indigo-100 dark:from-gray-900 dark:to-gray-800'
           }`}
-          style={{ paddingTop: '80px', scrollMarginTop: '80px' }} // Space for fixed header
-          style={
-            heroSection.background_image_url
+          style={{
+            paddingTop: '80px',
+            scrollMarginTop: '80px',
+            ...(heroSection.background_image_url
               ? {
                   backgroundImage: `url(${heroSection.background_image_url})`,
                   backgroundSize: 'cover',
                   backgroundPosition: 'center',
                 }
-              : undefined
-          }
+              : {}),
+          }}
         >
           {/* Background Overlay - Only show if opacity > 0 */}
           {heroSection.background_image_url && 
