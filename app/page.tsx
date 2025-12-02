@@ -41,7 +41,7 @@ export default async function Home() {
               : 'bg-gradient-to-br from-blue-50 to-indigo-100 dark:from-gray-900 dark:to-gray-800'
           }`}
           style={{
-            paddingTop: '80px',
+            marginTop: '80px', // Push section below fixed header
             scrollMarginTop: '80px',
             ...(heroSection.background_image_url
               ? {
@@ -52,20 +52,20 @@ export default async function Home() {
               : {}),
           }}
         >
-          {/* Background Overlay - Only show if opacity > 0 */}
+          {/* Background Overlay - Only show if opacity > 0 and explicitly set */}
           {heroSection.background_image_url && 
            heroSection.background_overlay_opacity !== null && 
            heroSection.background_overlay_opacity !== undefined &&
            Number(heroSection.background_overlay_opacity) > 0 && (
             <div
-              className="absolute inset-0 pointer-events-none"
+              className="absolute inset-0 pointer-events-none z-0"
               style={{
                 backgroundColor: heroSection.background_overlay_color || '#000000',
                 opacity: Number(heroSection.background_overlay_opacity),
               }}
             />
           )}
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 text-center relative z-10">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 text-center relative z-10" style={{ position: 'relative' }}>
             <h1 className="text-5xl md:text-7xl font-bold text-gray-900 dark:text-white mb-6">
               {heroSection.title}
             </h1>
