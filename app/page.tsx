@@ -48,31 +48,24 @@ export default async function Home() {
                   backgroundImage: `url(${heroSection.background_image_url})`,
                   backgroundSize: 'cover',
                   backgroundPosition: 'center',
+                  backgroundRepeat: 'no-repeat',
                 }
               : {}),
           }}
         >
-          {/* Background Overlay - Completely removed when opacity is 0, null, or undefined */}
-          {(() => {
-            // Convert to number and check if > 0
-            const opacity = heroSection.background_overlay_opacity
-            const opacityNum = opacity == null ? 0 : Number(opacity)
-            
-            // Only render overlay if we have a background image AND opacity is explicitly > 0
-            if (!heroSection.background_image_url || !opacityNum || opacityNum <= 0 || isNaN(opacityNum)) {
-              return null // No overlay div at all
-            }
-            
-            return (
-              <div
-                className="absolute inset-0 pointer-events-none z-0"
-                style={{
-                  backgroundColor: heroSection.background_overlay_color || '#000000',
-                  opacity: opacityNum,
-                }}
-              />
-            )
-          })()}
+          {/* Background Overlay - Only render if opacity is explicitly greater than 0 */}
+          {heroSection.background_image_url && 
+           heroSection.background_overlay_opacity != null &&
+           typeof heroSection.background_overlay_opacity === 'number' &&
+           heroSection.background_overlay_opacity > 0 ? (
+            <div
+              className="absolute inset-0 pointer-events-none z-0"
+              style={{
+                backgroundColor: heroSection.background_overlay_color || '#000000',
+                opacity: heroSection.background_overlay_opacity,
+              }}
+            />
+          ) : null}
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 text-center relative z-10" style={{ position: 'relative' }}>
             <div 
               className="text-5xl md:text-7xl font-bold mb-6"
