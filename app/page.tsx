@@ -35,7 +35,7 @@ export default async function Home() {
       {heroSection && (
         <section
           id="hero"
-          className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-100 dark:from-gray-900 dark:to-gray-800 pt-20"
+          className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-100 dark:from-gray-900 dark:to-gray-800 pt-20 relative"
           style={
             heroSection.background_image_url
               ? {
@@ -46,7 +46,17 @@ export default async function Home() {
               : undefined
           }
         >
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 text-center">
+          {/* Background Overlay */}
+          {heroSection.background_image_url && (
+            <div
+              className="absolute inset-0"
+              style={{
+                backgroundColor: heroSection.background_overlay_color || '#000000',
+                opacity: heroSection.background_overlay_opacity || 0.3,
+              }}
+            />
+          )}
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 text-center relative z-10">
             <h1 className="text-5xl md:text-7xl font-bold text-gray-900 dark:text-white mb-6">
               {heroSection.title}
             </h1>

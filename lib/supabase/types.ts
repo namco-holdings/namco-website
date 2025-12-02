@@ -99,6 +99,8 @@ export interface Database {
           secondary_cta_text: string | null
           secondary_cta_link: string | null
           background_image_url: string | null
+          background_overlay_color: string | null
+          background_overlay_opacity: number | null
           enabled: boolean
           display_order: number
           created_at: string
@@ -113,6 +115,8 @@ export interface Database {
           secondary_cta_text?: string | null
           secondary_cta_link?: string | null
           background_image_url?: string | null
+          background_overlay_color?: string | null
+          background_overlay_opacity?: number | null
           enabled?: boolean
           display_order?: number
           created_at?: string
@@ -127,6 +131,8 @@ export interface Database {
           secondary_cta_text?: string | null
           secondary_cta_link?: string | null
           background_image_url?: string | null
+          background_overlay_color?: string | null
+          background_overlay_opacity?: number | null
           enabled?: boolean
           display_order?: number
           created_at?: string

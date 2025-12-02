@@ -39,6 +39,8 @@ export default function SectionEditModal({
           secondary_cta_text: '',
           secondary_cta_link: '#about',
           background_image_url: '',
+          background_overlay_color: '#000000',
+          background_overlay_opacity: 0.3,
           enabled: true,
           display_order: 0,
         })
@@ -253,6 +255,61 @@ export default function SectionEditModal({
                 label="Background Image"
               />
             </div>
+            {formData.background_image_url && (
+              <div className="bg-gray-50 dark:bg-gray-700 rounded-lg p-4 space-y-4">
+                <h4 className="text-sm font-semibold text-gray-900 dark:text-white mb-3">
+                  Background Overlay
+                </h4>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                      Overlay Color
+                    </label>
+                    <div className="flex gap-2">
+                      <input
+                        type="color"
+                        name="background_overlay_color"
+                        value={formData.background_overlay_color || '#000000'}
+                        onChange={handleChange}
+                        className="w-16 h-10 border border-gray-300 dark:border-gray-600 rounded"
+                      />
+                      <input
+                        type="text"
+                        name="background_overlay_color"
+                        value={formData.background_overlay_color || '#000000'}
+                        onChange={handleChange}
+                        className="flex-1 px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
+                      />
+                    </div>
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                      Overlay Opacity: {((formData.background_overlay_opacity || 0) * 100).toFixed(0)}%
+                    </label>
+                    <input
+                      type="range"
+                      name="background_overlay_opacity"
+                      min="0"
+                      max="1"
+                      step="0.05"
+                      value={formData.background_overlay_opacity || 0.3}
+                      onChange={handleChange}
+                      className="w-full"
+                    />
+                    <div className="flex justify-between text-xs text-gray-500 dark:text-gray-400 mt-1">
+                      <span>0% (None)</span>
+                      <span>50%</span>
+                      <span>100% (Solid)</span>
+                    </div>
+                  </div>
+                </div>
+                <div className="mt-2 p-3 bg-white dark:bg-gray-800 rounded border border-gray-200 dark:border-gray-600">
+                  <p className="text-xs text-gray-600 dark:text-gray-400">
+                    <strong>Preview:</strong> The overlay will appear on top of your background image to improve text readability.
+                  </p>
+                </div>
+              </div>
+            )}
             <div className="flex items-center gap-4">
               <label className="flex items-center gap-2">
                 <input
