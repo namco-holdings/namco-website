@@ -60,7 +60,16 @@ export default async function Home() {
                 {heroSection.primary_cta_text && (
                   <a
                     href={heroSection.primary_cta_link || '#contact'}
-                    className="px-8 py-3 bg-blue-600 text-white rounded-lg font-semibold hover:bg-blue-700 transition-colors shadow-lg"
+                    className="px-8 py-3 text-white rounded-lg font-semibold transition-colors shadow-lg"
+                    style={{
+                      backgroundColor: 'var(--accent-color)',
+                    }}
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.backgroundColor = 'var(--accent-color-hover)'
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.backgroundColor = 'var(--accent-color)'
+                    }}
                   >
                     {heroSection.primary_cta_text}
                   </a>
@@ -68,7 +77,18 @@ export default async function Home() {
                 {heroSection.secondary_cta_text && (
                   <a
                     href={heroSection.secondary_cta_link || '#about'}
-                    className="px-8 py-3 bg-white dark:bg-gray-800 text-blue-600 dark:text-blue-400 rounded-lg font-semibold hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors border-2 border-blue-600 dark:border-blue-400"
+                    className="px-8 py-3 rounded-lg font-semibold transition-colors border-2"
+                    style={{
+                      backgroundColor: 'var(--background-color)',
+                      color: 'var(--accent-color)',
+                      borderColor: 'var(--accent-color)',
+                    }}
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.backgroundColor = 'rgba(0, 0, 0, 0.05)'
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.backgroundColor = 'var(--background-color)'
+                    }}
                   >
                     {heroSection.secondary_cta_text}
                   </a>

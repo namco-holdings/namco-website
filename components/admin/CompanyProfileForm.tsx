@@ -20,6 +20,14 @@ export default function CompanyProfileForm({ initialData }: CompanyProfileFormPr
     favicon_url: initialData.favicon_url || '',
     primary_color: initialData.primary_color || '#2563eb',
     secondary_color: initialData.secondary_color || '#1e40af',
+    background_color: initialData.background_color || '#ffffff',
+    background_color_dark: initialData.background_color_dark || '#0a0a0a',
+    text_color: initialData.text_color || '#171717',
+    text_color_dark: initialData.text_color_dark || '#ededed',
+    accent_color: initialData.accent_color || initialData.primary_color || '#2563eb',
+    accent_color_hover: initialData.accent_color_hover || initialData.secondary_color || '#1e40af',
+    border_color: initialData.border_color || '#e5e7eb',
+    border_color_dark: initialData.border_color_dark || '#374151',
     contact_email: initialData.contact_email || '',
     contact_phone: initialData.contact_phone || '',
     contact_address: initialData.contact_address || '',
@@ -175,6 +183,206 @@ export default function CompanyProfileForm({ initialData }: CompanyProfileFormPr
                 type="text"
                 name="secondary_color"
                 value={formData.secondary_color}
+                onChange={handleChange}
+                className="flex-1 px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-gray-700 dark:text-white"
+              />
+            </div>
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+              Accent Color (Buttons, Links)
+            </label>
+            <div className="flex gap-2">
+              <input
+                type="color"
+                name="accent_color"
+                value={formData.accent_color}
+                onChange={handleChange}
+                className="w-16 h-10 border border-gray-300 dark:border-gray-600 rounded"
+              />
+              <input
+                type="text"
+                name="accent_color"
+                value={formData.accent_color}
+                onChange={handleChange}
+                className="flex-1 px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-gray-700 dark:text-white"
+              />
+            </div>
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+              Accent Hover Color
+            </label>
+            <div className="flex gap-2">
+              <input
+                type="color"
+                name="accent_color_hover"
+                value={formData.accent_color_hover}
+                onChange={handleChange}
+                className="w-16 h-10 border border-gray-300 dark:border-gray-600 rounded"
+              />
+              <input
+                type="text"
+                name="accent_color_hover"
+                value={formData.accent_color_hover}
+                onChange={handleChange}
+                className="flex-1 px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-gray-700 dark:text-white"
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6 space-y-6">
+        <h2 className="text-xl font-semibold text-gray-900 dark:text-white">
+          Background Colors
+        </h2>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div>
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+              Light Mode Background
+            </label>
+            <div className="flex gap-2">
+              <input
+                type="color"
+                name="background_color"
+                value={formData.background_color}
+                onChange={handleChange}
+                className="w-16 h-10 border border-gray-300 dark:border-gray-600 rounded"
+              />
+              <input
+                type="text"
+                name="background_color"
+                value={formData.background_color}
+                onChange={handleChange}
+                className="flex-1 px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-gray-700 dark:text-white"
+              />
+            </div>
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+              Dark Mode Background
+            </label>
+            <div className="flex gap-2">
+              <input
+                type="color"
+                name="background_color_dark"
+                value={formData.background_color_dark}
+                onChange={handleChange}
+                className="w-16 h-10 border border-gray-300 dark:border-gray-600 rounded"
+              />
+              <input
+                type="text"
+                name="background_color_dark"
+                value={formData.background_color_dark}
+                onChange={handleChange}
+                className="flex-1 px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-gray-700 dark:text-white"
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6 space-y-6">
+        <h2 className="text-xl font-semibold text-gray-900 dark:text-white">
+          Text Colors
+        </h2>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div>
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+              Light Mode Text
+            </label>
+            <div className="flex gap-2">
+              <input
+                type="color"
+                name="text_color"
+                value={formData.text_color}
+                onChange={handleChange}
+                className="w-16 h-10 border border-gray-300 dark:border-gray-600 rounded"
+              />
+              <input
+                type="text"
+                name="text_color"
+                value={formData.text_color}
+                onChange={handleChange}
+                className="flex-1 px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-gray-700 dark:text-white"
+              />
+            </div>
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+              Dark Mode Text
+            </label>
+            <div className="flex gap-2">
+              <input
+                type="color"
+                name="text_color_dark"
+                value={formData.text_color_dark}
+                onChange={handleChange}
+                className="w-16 h-10 border border-gray-300 dark:border-gray-600 rounded"
+              />
+              <input
+                type="text"
+                name="text_color_dark"
+                value={formData.text_color_dark}
+                onChange={handleChange}
+                className="flex-1 px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-gray-700 dark:text-white"
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6 space-y-6">
+        <h2 className="text-xl font-semibold text-gray-900 dark:text-white">
+          Border Colors
+        </h2>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div>
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+              Light Mode Border
+            </label>
+            <div className="flex gap-2">
+              <input
+                type="color"
+                name="border_color"
+                value={formData.border_color}
+                onChange={handleChange}
+                className="w-16 h-10 border border-gray-300 dark:border-gray-600 rounded"
+              />
+              <input
+                type="text"
+                name="border_color"
+                value={formData.border_color}
+                onChange={handleChange}
+                className="flex-1 px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-gray-700 dark:text-white"
+              />
+            </div>
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+              Dark Mode Border
+            </label>
+            <div className="flex gap-2">
+              <input
+                type="color"
+                name="border_color_dark"
+                value={formData.border_color_dark}
+                onChange={handleChange}
+                className="w-16 h-10 border border-gray-300 dark:border-gray-600 rounded"
+              />
+              <input
+                type="text"
+                name="border_color_dark"
+                value={formData.border_color_dark}
                 onChange={handleChange}
                 className="flex-1 px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-gray-700 dark:text-white"
               />

@@ -18,6 +18,14 @@ export interface Database {
           favicon_url: string | null
           primary_color: string
           secondary_color: string
+          background_color: string | null
+          background_color_dark: string | null
+          text_color: string | null
+          text_color_dark: string | null
+          accent_color: string | null
+          accent_color_hover: string | null
+          border_color: string | null
+          border_color_dark: string | null
           contact_email: string | null
           contact_phone: string | null
           contact_address: string | null
@@ -36,6 +44,14 @@ export interface Database {
           favicon_url?: string | null
           primary_color?: string
           secondary_color?: string
+          background_color?: string | null
+          background_color_dark?: string | null
+          text_color?: string | null
+          text_color_dark?: string | null
+          accent_color?: string | null
+          accent_color_hover?: string | null
+          border_color?: string | null
+          border_color_dark?: string | null
           contact_email?: string | null
           contact_phone?: string | null
           contact_address?: string | null
@@ -54,6 +70,14 @@ export interface Database {
           favicon_url?: string | null
           primary_color?: string
           secondary_color?: string
+          background_color?: string | null
+          background_color_dark?: string | null
+          text_color?: string | null
+          text_color_dark?: string | null
+          accent_color?: string | null
+          accent_color_hover?: string | null
+          border_color?: string | null
+          border_color_dark?: string | null
           contact_email?: string | null
           contact_phone?: string | null
           contact_address?: string | null

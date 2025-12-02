@@ -46,7 +46,16 @@ export default function NavigationClient({ companyName, navItems }: NavigationPr
           <div className="flex-shrink-0">
             <button
               onClick={() => scrollToSection('hero')}
-              className="text-2xl md:text-3xl font-bold text-gray-900 dark:text-white hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
+              className="text-2xl md:text-3xl font-bold text-gray-900 dark:text-white transition-colors"
+              style={{
+                color: 'var(--text-color)',
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.color = 'var(--accent-color)'
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.color = 'var(--text-color)'
+              }}
             >
               {companyName}
             </button>
@@ -58,7 +67,16 @@ export default function NavigationClient({ companyName, navItems }: NavigationPr
               <button
                 key={item.id}
                 onClick={() => scrollToSection(item.section_id)}
-                className="text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors font-medium"
+                className="text-gray-700 dark:text-gray-300 transition-colors font-medium"
+                style={{
+                  color: 'var(--text-color)',
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.color = 'var(--accent-color)'
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.color = 'var(--text-color)'
+                }}
               >
                 {item.label}
               </button>
