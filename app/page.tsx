@@ -1,6 +1,7 @@
 import Navigation from '@/components/Navigation'
 import Footer from '@/components/Footer'
 import ContactForm from '@/components/ContactForm'
+import MarkdownRenderer from '@/components/MarkdownRenderer'
 import {
   getSiteSettings,
   getHeroSection,
@@ -74,13 +75,13 @@ export default async function Home() {
             )
           })()}
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 text-center relative z-10" style={{ position: 'relative' }}>
-            <h1 className="text-5xl md:text-7xl font-bold text-gray-900 dark:text-white mb-6">
-              {heroSection.title}
-            </h1>
+            <div className="text-5xl md:text-7xl font-bold text-gray-900 dark:text-white mb-6">
+              <MarkdownRenderer content={heroSection.title} />
+            </div>
             {heroSection.subtitle && (
-              <p className="text-xl md:text-2xl text-gray-600 dark:text-gray-300 mb-8 max-w-3xl mx-auto">
-                {heroSection.subtitle}
-              </p>
+              <div className="text-xl md:text-2xl text-gray-600 dark:text-gray-300 mb-8 max-w-3xl mx-auto">
+                <MarkdownRenderer content={heroSection.subtitle} />
+              </div>
             )}
             {(heroSection.primary_cta_text || heroSection.secondary_cta_text) && (
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
@@ -131,21 +132,18 @@ export default async function Home() {
         <section id="about" className="py-20 bg-white dark:bg-gray-900 scroll-mt-20">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center mb-16">
-              <h2 className="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white mb-4">
-                {aboutSection.title}
-              </h2>
+              <div className="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white mb-4">
+                <MarkdownRenderer content={aboutSection.title} />
+              </div>
               {aboutSection.subtitle && (
-                <p className="text-xl text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
-                  {aboutSection.subtitle}
-                </p>
+                <div className="text-xl text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
+                  <MarkdownRenderer content={aboutSection.subtitle} />
+                </div>
               )}
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
-              <div>
-                <div
-                  className="text-gray-600 dark:text-gray-400 whitespace-pre-line"
-                  dangerouslySetInnerHTML={{ __html: aboutSection.content }}
-                />
+              <div className="text-gray-600 dark:text-gray-400">
+                <MarkdownRenderer content={aboutSection.content} />
               </div>
               <div className="bg-gray-100 dark:bg-gray-800 rounded-lg p-8 h-64 flex items-center justify-center">
                 {aboutSection.image_url ? (
@@ -184,12 +182,12 @@ export default async function Home() {
                   {service.icon && (
                     <div className="text-4xl mb-4">{service.icon}</div>
                   )}
-                  <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-3">
-                    {service.title}
-                  </h3>
-                  <p className="text-gray-600 dark:text-gray-400">
-                    {service.description}
-                  </p>
+                  <div className="text-xl font-semibold text-gray-900 dark:text-white mb-3">
+                    <MarkdownRenderer content={service.title} />
+                  </div>
+                  <div className="text-gray-600 dark:text-gray-400">
+                    <MarkdownRenderer content={service.description} />
+                  </div>
                 </div>
               ))}
             </div>
@@ -227,13 +225,13 @@ export default async function Home() {
                     )}
                   </div>
                   <div className="p-6">
-                    <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">
-                      {item.title}
-                    </h3>
+                    <div className="text-xl font-semibold text-gray-900 dark:text-white mb-2">
+                      <MarkdownRenderer content={item.title} />
+                    </div>
                     {item.description && (
-                      <p className="text-gray-600 dark:text-gray-400">
-                        {item.description}
-                      </p>
+                      <div className="text-gray-600 dark:text-gray-400">
+                        <MarkdownRenderer content={item.description} />
+                      </div>
                     )}
                     {item.project_url && (
                       <a
@@ -277,13 +275,13 @@ export default async function Home() {
                       {'☆'.repeat(5 - testimonial.rating)}
                     </div>
                   )}
-                  <p className="text-gray-600 dark:text-gray-400 mb-6 italic">
-                    "{testimonial.quote}"
-                  </p>
+                  <div className="text-gray-600 dark:text-gray-400 mb-6 italic">
+                    <MarkdownRenderer content={`"${testimonial.quote}"`} />
+                  </div>
                   <div>
-                    <p className="font-semibold text-gray-900 dark:text-white">
-                      {testimonial.author_name}
-                    </p>
+                    <div className="font-semibold text-gray-900 dark:text-white">
+                      <MarkdownRenderer content={testimonial.author_name} />
+                    </div>
                     {(testimonial.author_role || testimonial.author_company) && (
                       <p className="text-sm text-gray-500 dark:text-gray-500">
                         {[testimonial.author_role, testimonial.author_company]

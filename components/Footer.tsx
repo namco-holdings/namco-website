@@ -1,4 +1,5 @@
 import { getSiteSettings, getFooterContent, getNavigationItems } from '@/lib/data'
+import MarkdownRenderer from './MarkdownRenderer'
 
 export default async function Footer() {
   const currentYear = new Date().getFullYear()
@@ -19,20 +20,20 @@ export default async function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {/* About Section */}
           <div>
-            <h3 className="text-2xl font-bold text-white mb-4">
-              {aboutSection?.title || siteSettings.company_name}
-            </h3>
-            <p className="text-sm">
-              {aboutSection?.content || siteSettings.company_tagline || 'Building modern, responsive websites that make a difference.'}
-            </p>
+            <div className="text-2xl font-bold text-white mb-4">
+              <MarkdownRenderer content={aboutSection?.title || siteSettings.company_name} />
+            </div>
+            <div className="text-sm">
+              <MarkdownRenderer content={aboutSection?.content || siteSettings.company_tagline || 'Building modern, responsive websites that make a difference.'} />
+            </div>
           </div>
 
           {/* Quick Links Section */}
           {linksSection && (
             <div>
-              <h4 className="text-lg font-semibold text-white mb-4">
-                {linksSection.title || 'Quick Links'}
-              </h4>
+              <div className="text-lg font-semibold text-white mb-4">
+                <MarkdownRenderer content={linksSection.title || 'Quick Links'} />
+              </div>
               <ul className="space-y-2 text-sm">
                 {navItems.slice(1, 5).map((item) => (
                   <li key={item.id}>
@@ -50,9 +51,9 @@ export default async function Footer() {
 
           {/* Contact Section */}
           <div>
-            <h4 className="text-lg font-semibold text-white mb-4">
-              {contactSection?.title || 'Contact'}
-            </h4>
+            <div className="text-lg font-semibold text-white mb-4">
+              <MarkdownRenderer content={contactSection?.title || 'Contact'} />
+            </div>
             <ul className="space-y-2 text-sm">
               {siteSettings.contact_email && (
                 <li>Email: {siteSettings.contact_email}</li>

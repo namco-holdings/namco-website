@@ -30,6 +30,7 @@ export default function CompanyProfileForm({ initialData }: CompanyProfileFormPr
     border_color_dark: initialData.border_color_dark || '#374151',
     header_background_color: initialData.header_background_color || '#ffffff',
     header_text_color: initialData.header_text_color || '#171717',
+    font_family: initialData.font_family || 'Inter',
     contact_email: initialData.contact_email || '',
     contact_phone: initialData.contact_phone || '',
     contact_address: initialData.contact_address || '',
@@ -65,7 +66,7 @@ export default function CompanyProfileForm({ initialData }: CompanyProfileFormPr
     }
   }
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     setFormData({
       ...formData,
       [e.target.name]: e.target.value,
@@ -390,6 +391,43 @@ export default function CompanyProfileForm({ initialData }: CompanyProfileFormPr
               />
             </div>
           </div>
+        </div>
+      </div>
+
+      <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6 space-y-6">
+        <h2 className="text-xl font-semibold text-gray-900 dark:text-white">
+          Typography
+        </h2>
+
+        <div>
+          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+            Font Family
+          </label>
+          <select
+            name="font_family"
+            value={formData.font_family}
+            onChange={handleChange}
+            className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-gray-700 dark:text-white"
+          >
+            <option value="Inter">Inter</option>
+            <option value="Roboto">Roboto</option>
+            <option value="Open Sans">Open Sans</option>
+            <option value="Lato">Lato</option>
+            <option value="Montserrat">Montserrat</option>
+            <option value="Poppins">Poppins</option>
+            <option value="Raleway">Raleway</option>
+            <option value="Playfair Display">Playfair Display</option>
+            <option value="Merriweather">Merriweather</option>
+            <option value="Source Sans Pro">Source Sans Pro</option>
+            <option value="Nunito">Nunito</option>
+            <option value="Ubuntu">Ubuntu</option>
+            <option value="Crimson Text">Crimson Text</option>
+            <option value="Lora">Lora</option>
+            <option value="PT Sans">PT Sans</option>
+          </select>
+          <p className="text-xs text-gray-500 dark:text-gray-400 mt-2">
+            Select the font family to use across your website
+          </p>
         </div>
       </div>
 
