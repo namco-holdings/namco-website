@@ -110,6 +110,12 @@ export interface Database {
           background_image_url: string | null
           background_overlay_color: string | null
           background_overlay_opacity: number | null
+          title_color: string | null
+          subtitle_color: string | null
+          primary_cta_text_color: string | null
+          primary_cta_bg_color: string | null
+          secondary_cta_text_color: string | null
+          secondary_cta_bg_color: string | null
           enabled: boolean
           display_order: number
           created_at: string
@@ -126,6 +132,12 @@ export interface Database {
           background_image_url?: string | null
           background_overlay_color?: string | null
           background_overlay_opacity?: number | null
+          title_color?: string | null
+          subtitle_color?: string | null
+          primary_cta_text_color?: string | null
+          primary_cta_bg_color?: string | null
+          secondary_cta_text_color?: string | null
+          secondary_cta_bg_color?: string | null
           enabled?: boolean
           display_order?: number
           created_at?: string
@@ -142,6 +154,12 @@ export interface Database {
           background_image_url?: string | null
           background_overlay_color?: string | null
           background_overlay_opacity?: number | null
+          title_color?: string | null
+          subtitle_color?: string | null
+          primary_cta_text_color?: string | null
+          primary_cta_bg_color?: string | null
+          secondary_cta_text_color?: string | null
+          secondary_cta_bg_color?: string | null
           enabled?: boolean
           display_order?: number
           created_at?: string
@@ -155,6 +173,9 @@ export interface Database {
           subtitle: string | null
           content: string
           image_url: string | null
+          title_color: string | null
+          subtitle_color: string | null
+          content_color: string | null
           enabled: boolean
           display_order: number
           created_at: string
@@ -166,6 +187,9 @@ export interface Database {
           subtitle?: string | null
           content: string
           image_url?: string | null
+          title_color?: string | null
+          subtitle_color?: string | null
+          content_color?: string | null
           enabled?: boolean
           display_order?: number
           created_at?: string
@@ -189,6 +213,8 @@ export interface Database {
           title: string
           description: string
           icon: string | null
+          title_color: string | null
+          description_color: string | null
           enabled: boolean
           display_order: number
           created_at: string
@@ -209,6 +235,8 @@ export interface Database {
           title?: string
           description?: string
           icon?: string | null
+          title_color?: string | null
+          description_color?: string | null
           enabled?: boolean
           display_order?: number
           created_at?: string
@@ -223,6 +251,8 @@ export interface Database {
           image_url: string | null
           project_url: string | null
           category: string | null
+          title_color: string | null
+          description_color: string | null
           enabled: boolean
           display_order: number
           created_at: string
@@ -247,6 +277,8 @@ export interface Database {
           image_url?: string | null
           project_url?: string | null
           category?: string | null
+          title_color?: string | null
+          description_color?: string | null
           enabled?: boolean
           display_order?: number
           created_at?: string
@@ -262,6 +294,9 @@ export interface Database {
           author_company: string | null
           author_image_url: string | null
           rating: number | null
+          quote_color: string | null
+          author_name_color: string | null
+          author_role_color: string | null
           enabled: boolean
           display_order: number
           created_at: string
@@ -275,6 +310,9 @@ export interface Database {
           author_company?: string | null
           author_image_url?: string | null
           rating?: number | null
+          quote_color?: string | null
+          author_name_color?: string | null
+          author_role_color?: string | null
           enabled?: boolean
           display_order?: number
           created_at?: string

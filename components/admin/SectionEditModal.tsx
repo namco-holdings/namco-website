@@ -41,6 +41,12 @@ export default function SectionEditModal({
           background_image_url: '',
           background_overlay_color: '#000000',
           background_overlay_opacity: 0,
+          title_color: '',
+          subtitle_color: '',
+          primary_cta_text_color: '',
+          primary_cta_bg_color: '',
+          secondary_cta_text_color: '',
+          secondary_cta_bg_color: '',
           enabled: true,
           display_order: 0,
         })
@@ -51,6 +57,9 @@ export default function SectionEditModal({
           subtitle: '',
           content: '',
           image_url: '',
+          title_color: '',
+          subtitle_color: '',
+          content_color: '',
           enabled: true,
           display_order: 0,
         })
@@ -60,6 +69,8 @@ export default function SectionEditModal({
           title: '',
           description: '',
           icon: '',
+          title_color: '',
+          description_color: '',
           enabled: true,
           display_order: 0,
         })
@@ -71,6 +82,8 @@ export default function SectionEditModal({
           image_url: '',
           project_url: '',
           category: '',
+          title_color: '',
+          description_color: '',
           enabled: true,
           display_order: 0,
         })
@@ -78,6 +91,9 @@ export default function SectionEditModal({
       case 'testimonials':
         setFormData({
           quote: '',
+          quote_color: '',
+          author_name_color: '',
+          author_role_color: '',
           author_name: '',
           author_role: '',
           author_company: '',
@@ -194,6 +210,60 @@ export default function SectionEditModal({
                 className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
               />
             </div>
+
+            {/* Text Colors */}
+            <div className="bg-gray-50 dark:bg-gray-700 rounded-lg p-4 space-y-4">
+              <h4 className="text-sm font-semibold text-gray-900 dark:text-white mb-3">
+                Text Colors
+              </h4>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                    Title Color
+                  </label>
+                  <div className="flex gap-2">
+                    <input
+                      type="color"
+                      name="title_color"
+                      value={formData.title_color || '#1f2937'}
+                      onChange={handleChange}
+                      className="w-16 h-10 border border-gray-300 dark:border-gray-600 rounded"
+                    />
+                    <input
+                      type="text"
+                      name="title_color"
+                      value={formData.title_color || ''}
+                      onChange={handleChange}
+                      placeholder="Leave empty for default"
+                      className="flex-1 px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
+                    />
+                  </div>
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                    Subtitle Color
+                  </label>
+                  <div className="flex gap-2">
+                    <input
+                      type="color"
+                      name="subtitle_color"
+                      value={formData.subtitle_color || '#4b5563'}
+                      onChange={handleChange}
+                      className="w-16 h-10 border border-gray-300 dark:border-gray-600 rounded"
+                    />
+                    <input
+                      type="text"
+                      name="subtitle_color"
+                      value={formData.subtitle_color || ''}
+                      onChange={handleChange}
+                      placeholder="Leave empty for default"
+                      className="flex-1 px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+
             <div className="grid grid-cols-2 gap-4">
               <div>
                 <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
@@ -246,6 +316,104 @@ export default function SectionEditModal({
                 />
               </div>
             </div>
+
+            {/* CTA Button Colors */}
+            <div className="bg-gray-50 dark:bg-gray-700 rounded-lg p-4 space-y-4">
+              <h4 className="text-sm font-semibold text-gray-900 dark:text-white mb-3">
+                Button Colors
+              </h4>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                    Primary CTA Text Color
+                  </label>
+                  <div className="flex gap-2">
+                    <input
+                      type="color"
+                      name="primary_cta_text_color"
+                      value={formData.primary_cta_text_color || '#ffffff'}
+                      onChange={handleChange}
+                      className="w-16 h-10 border border-gray-300 dark:border-gray-600 rounded"
+                    />
+                    <input
+                      type="text"
+                      name="primary_cta_text_color"
+                      value={formData.primary_cta_text_color || ''}
+                      onChange={handleChange}
+                      placeholder="Leave empty for default"
+                      className="flex-1 px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
+                    />
+                  </div>
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                    Primary CTA Background Color
+                  </label>
+                  <div className="flex gap-2">
+                    <input
+                      type="color"
+                      name="primary_cta_bg_color"
+                      value={formData.primary_cta_bg_color || '#2563eb'}
+                      onChange={handleChange}
+                      className="w-16 h-10 border border-gray-300 dark:border-gray-600 rounded"
+                    />
+                    <input
+                      type="text"
+                      name="primary_cta_bg_color"
+                      value={formData.primary_cta_bg_color || ''}
+                      onChange={handleChange}
+                      placeholder="Leave empty for default"
+                      className="flex-1 px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
+                    />
+                  </div>
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                    Secondary CTA Text Color
+                  </label>
+                  <div className="flex gap-2">
+                    <input
+                      type="color"
+                      name="secondary_cta_text_color"
+                      value={formData.secondary_cta_text_color || '#2563eb'}
+                      onChange={handleChange}
+                      className="w-16 h-10 border border-gray-300 dark:border-gray-600 rounded"
+                    />
+                    <input
+                      type="text"
+                      name="secondary_cta_text_color"
+                      value={formData.secondary_cta_text_color || ''}
+                      onChange={handleChange}
+                      placeholder="Leave empty for default"
+                      className="flex-1 px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
+                    />
+                  </div>
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                    Secondary CTA Background Color
+                  </label>
+                  <div className="flex gap-2">
+                    <input
+                      type="color"
+                      name="secondary_cta_bg_color"
+                      value={formData.secondary_cta_bg_color || '#ffffff'}
+                      onChange={handleChange}
+                      className="w-16 h-10 border border-gray-300 dark:border-gray-600 rounded"
+                    />
+                    <input
+                      type="text"
+                      name="secondary_cta_bg_color"
+                      value={formData.secondary_cta_bg_color || ''}
+                      onChange={handleChange}
+                      placeholder="Leave empty for default"
+                      className="flex-1 px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+
             <div>
               <ImageUpload
                 value={formData.background_image_url || ''}

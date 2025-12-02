@@ -36,14 +36,13 @@ export default async function Home() {
       {heroSection && (
         <section
           id="hero"
-          className={`min-h-screen flex items-center justify-center relative ${
+          className={`min-h-screen flex items-center justify-center relative mt-16 md:mt-20 ${
             heroSection.background_image_url
               ? ''
               : 'bg-gradient-to-br from-blue-50 to-indigo-100 dark:from-gray-900 dark:to-gray-800'
           }`}
           style={{
-            marginTop: '80px', // Push section below fixed header
-            scrollMarginTop: '80px',
+            scrollMarginTop: '64px',
             ...(heroSection.background_image_url
               ? {
                   backgroundImage: `url(${heroSection.background_image_url})`,
@@ -75,11 +74,17 @@ export default async function Home() {
             )
           })()}
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 text-center relative z-10" style={{ position: 'relative' }}>
-            <div className="text-5xl md:text-7xl font-bold text-gray-900 dark:text-white mb-6">
+            <div 
+              className="text-5xl md:text-7xl font-bold mb-6"
+              style={{ color: heroSection.title_color || undefined }}
+            >
               <MarkdownRenderer content={heroSection.title} />
             </div>
             {heroSection.subtitle && (
-              <div className="text-xl md:text-2xl text-gray-600 dark:text-gray-300 mb-8 max-w-3xl mx-auto">
+              <div 
+                className="text-xl md:text-2xl mb-8 max-w-3xl mx-auto"
+                style={{ color: heroSection.subtitle_color || undefined }}
+              >
                 <MarkdownRenderer content={heroSection.subtitle} />
               </div>
             )}
@@ -88,15 +93,16 @@ export default async function Home() {
                 {heroSection.primary_cta_text && (
                   <a
                     href={heroSection.primary_cta_link || '#contact'}
-                    className="px-8 py-3 text-white rounded-lg font-semibold transition-colors shadow-lg"
+                    className="px-8 py-3 rounded-lg font-semibold transition-colors shadow-lg"
                     style={{
-                      backgroundColor: 'var(--accent-color)',
+                      backgroundColor: heroSection.primary_cta_bg_color || 'var(--accent-color)',
+                      color: heroSection.primary_cta_text_color || '#ffffff',
                     }}
                     onMouseEnter={(e) => {
-                      e.currentTarget.style.backgroundColor = 'var(--accent-color-hover)'
+                      e.currentTarget.style.opacity = '0.9'
                     }}
                     onMouseLeave={(e) => {
-                      e.currentTarget.style.backgroundColor = 'var(--accent-color)'
+                      e.currentTarget.style.opacity = '1'
                     }}
                   >
                     {heroSection.primary_cta_text}
@@ -107,15 +113,15 @@ export default async function Home() {
                     href={heroSection.secondary_cta_link || '#about'}
                     className="px-8 py-3 rounded-lg font-semibold transition-colors border-2"
                     style={{
-                      backgroundColor: 'var(--background-color)',
-                      color: 'var(--accent-color)',
-                      borderColor: 'var(--accent-color)',
+                      backgroundColor: heroSection.secondary_cta_bg_color || 'var(--background-color)',
+                      color: heroSection.secondary_cta_text_color || 'var(--accent-color)',
+                      borderColor: heroSection.secondary_cta_text_color || 'var(--accent-color)',
                     }}
                     onMouseEnter={(e) => {
                       e.currentTarget.style.backgroundColor = 'rgba(0, 0, 0, 0.05)'
                     }}
                     onMouseLeave={(e) => {
-                      e.currentTarget.style.backgroundColor = 'var(--background-color)'
+                      e.currentTarget.style.backgroundColor = heroSection.secondary_cta_bg_color || 'var(--background-color)'
                     }}
                   >
                     {heroSection.secondary_cta_text}
@@ -129,7 +135,7 @@ export default async function Home() {
 
       {/* About Section */}
       {aboutSection && (
-        <section id="about" className="py-20 bg-white dark:bg-gray-900 scroll-mt-20">
+        <section id="about" className="py-20 bg-white dark:bg-gray-900 scroll-mt-16 md:scroll-mt-20">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center mb-16">
               <div className="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white mb-4">
@@ -163,7 +169,7 @@ export default async function Home() {
 
       {/* Services Section */}
       {services.length > 0 && (
-        <section id="services" className="py-20 bg-gray-50 dark:bg-gray-800 scroll-mt-20">
+        <section id="services" className="py-20 bg-gray-50 dark:bg-gray-800 scroll-mt-16 md:scroll-mt-20">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center mb-16">
               <h2 className="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white mb-4">
@@ -197,7 +203,7 @@ export default async function Home() {
 
       {/* Portfolio Section */}
       {portfolioItems.length > 0 && (
-        <section id="portfolio" className="py-20 bg-white dark:bg-gray-900 scroll-mt-20">
+        <section id="portfolio" className="py-20 bg-white dark:bg-gray-900 scroll-mt-16 md:scroll-mt-20">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center mb-16">
               <h2 className="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white mb-4">
@@ -253,7 +259,7 @@ export default async function Home() {
 
       {/* Testimonials Section */}
       {testimonials.length > 0 && (
-        <section id="testimonials" className="py-20 bg-gray-50 dark:bg-gray-800 scroll-mt-20">
+        <section id="testimonials" className="py-20 bg-gray-50 dark:bg-gray-800 scroll-mt-16 md:scroll-mt-20">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center mb-16">
               <h2 className="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white mb-4">
@@ -298,7 +304,7 @@ export default async function Home() {
       )}
 
       {/* Contact Section */}
-      <section id="contact" className="py-20 bg-white dark:bg-gray-900 scroll-mt-20">
+      <section id="contact" className="py-20 bg-white dark:bg-gray-900 scroll-mt-16 md:scroll-mt-20">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
             <h2 className="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white mb-4">

@@ -41,7 +41,7 @@ export default function NavigationClient({
         color: headerTextColor,
       }}
     >
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
         <div className="flex items-center justify-between h-16 md:h-20">
           <div className="flex-shrink-0">
             <button
@@ -121,9 +121,15 @@ export default function NavigationClient({
           </button>
         </div>
 
-        {/* Mobile Navigation */}
+        {/* Mobile Navigation - Absolutely positioned to not affect header height */}
         {isMobileMenuOpen && (
-          <div className="md:hidden py-4 space-y-2 border-t" style={{ borderColor: 'rgba(0,0,0,0.1)' }}>
+          <div 
+            className="md:hidden absolute top-16 left-0 right-0 py-4 space-y-2 border-t shadow-lg"
+            style={{ 
+              borderColor: 'rgba(0,0,0,0.1)',
+              backgroundColor: headerBackgroundColor,
+            }}
+          >
             {navItems.map((item) => (
               <button
                 key={item.id}
