@@ -134,3 +134,5 @@ For more storage, upgrade your Supabase plan.
 
 **After running the migration, refresh your admin console and try uploading an image!**
 
+
+

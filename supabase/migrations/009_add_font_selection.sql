@@ -18,3 +18,5 @@ ADD COLUMN IF NOT EXISTS font_family TEXT DEFAULT 'Inter' CHECK (font_family IN 
   'PT Sans'
 ));
 
+
+

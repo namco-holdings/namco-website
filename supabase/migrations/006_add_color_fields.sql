@@ -10,3 +10,5 @@ ADD COLUMN IF NOT EXISTS accent_color_hover TEXT DEFAULT '#1e40af',
 ADD COLUMN IF NOT EXISTS border_color TEXT DEFAULT '#e5e7eb',
 ADD COLUMN IF NOT EXISTS border_color_dark TEXT DEFAULT '#374151';
 
+
+

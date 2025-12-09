@@ -98,3 +98,5 @@ Components use these CSS variables via inline styles or CSS classes, so colors u
 
 **After running the migration, go to Company Profile and customize your colors!**
 
+
+

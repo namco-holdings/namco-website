@@ -124,3 +124,5 @@ You should see all 6 tables listed.
 
 **Once migrations are run, refresh your admin console and try adding a section again!**
 
+
+
