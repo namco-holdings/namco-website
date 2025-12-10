@@ -8,7 +8,7 @@ interface UnifiedSection {
   id: string
   section_number: number
   section_name: string
-  section_type: 'hero' | 'about' | 'services' | 'portfolio' | 'testimonials'
+  section_type: 'hero' | 'about' | 'services' | 'testimonials'
   title: string
   enabled: boolean
   inNavigation: boolean
@@ -30,12 +30,10 @@ export default function SectionsManager() {
       const supabase = createClient()
       
       // Load all sections from all tables
-      const [heroData, aboutData, servicesData, portfolioSectionData, portfolioData, testimonialsData, navItems] = await Promise.all([
+      const [heroData, aboutData, servicesData, testimonialsData, navItems] = await Promise.all([
         supabase.from('hero_section').select('*').order('display_order'),
         supabase.from('about_section').select('*').order('display_order'),
         supabase.from('services').select('*').order('display_order'),
-        supabase.from('portfolio_section').select('*').order('display_order'),
-        supabase.from('portfolio_items').select('*').order('display_order'),
         supabase.from('testimonials').select('*').order('display_order'),
         supabase.from('navigation_items').select('*').eq('enabled', true),
       ])
@@ -46,7 +44,7 @@ export default function SectionsManager() {
       // Helper to add sections
       const addSections = (
         data: any[] | null,
-        type: 'hero' | 'about' | 'services' | 'portfolio' | 'testimonials',
+        type: 'hero' | 'about' | 'services' | 'testimonials',
         tableName: string
       ) => {
         if (!data) return
@@ -70,39 +68,6 @@ export default function SectionsManager() {
       addSections(heroData.data, 'hero', 'hero_section')
       addSections(aboutData.data, 'about', 'about_section')
       addSections(servicesData.data, 'services', 'services')
-      
-      // Portfolio section is special - use portfolio_section table for section settings
-      if (portfolioSectionData.data && portfolioSectionData.data.length > 0) {
-        portfolioSectionData.data.forEach((item) => {
-          const navItem = navItems.data?.find((nav) => nav.section_id === 'portfolio')
-          allSections.push({
-            id: item.id,
-            section_number: item.display_order,
-            section_name: item.section_name || 'Portfolio',
-            section_type: 'portfolio',
-            title: item.title || 'Our Portfolio',
-            enabled: item.enabled,
-            inNavigation: !!navItem,
-            display_order: item.display_order,
-            table_name: 'portfolio_section',
-          })
-        })
-      } else if (portfolioData.data && portfolioData.data.length > 0) {
-        // Portfolio section doesn't exist but portfolio items do - show placeholder that can be created
-        const navItem = navItems.data?.find((nav) => nav.section_id === 'portfolio')
-        allSections.push({
-          id: 'portfolio-new',
-          section_number: portfolioData.data[0]?.display_order || 0,
-          section_name: 'Portfolio',
-          section_type: 'portfolio',
-          title: 'Our Portfolio',
-          enabled: true,
-          inNavigation: !!navItem,
-          display_order: portfolioData.data[0]?.display_order || 0,
-          table_name: 'portfolio_section',
-        })
-      }
-      
       addSections(testimonialsData.data, 'testimonials', 'testimonials')
 
       // Sort by display_order
@@ -269,8 +234,8 @@ export default function SectionsManager() {
             <button
               onClick={() => {
                 // Show a dialog to select section type
-                const type = prompt('Enter section type (hero, about, services, portfolio, testimonials):')
-                if (type && ['hero', 'about', 'services', 'portfolio', 'testimonials'].includes(type)) {
+                const type = prompt('Enter section type (hero, about, services, testimonials):')
+                if (type && ['hero', 'about', 'services', 'testimonials'].includes(type)) {
                   setEditingSection({ id: 'new', type })
                 }
               }}
@@ -381,7 +346,7 @@ export default function SectionsManager() {
       {editingSection && (
         <SectionEditModal
           sectionId={editingSection.id}
-          sectionType={editingSection.type as 'hero' | 'about' | 'services' | 'portfolio' | 'testimonials'}
+          sectionType={editingSection.type as 'hero' | 'about' | 'services' | 'testimonials'}
           onClose={() => {
             setEditingSection(null)
             loadAllSections()
