@@ -109,6 +109,68 @@ export async function getServices(): Promise<Service[]> {
   }
 }
 
+export async function getPortfolioSection(): Promise<{
+  id: string
+  section_name: string | null
+  title: string | null
+  subtitle: string | null
+  title_color: string | null
+  subtitle_color: string | null
+  enabled: boolean
+  display_order: number
+} | null> {
+  try {
+    const supabase = await createClient()
+    const { data } = await supabase
+      .from('portfolio_section')
+      .select('*')
+      .eq('enabled', true)
+      .order('display_order', { ascending: true })
+      .limit(1)
+      .single()
+
+    return data
+  } catch {
+    // Fallback: try to get section info from first portfolio item
+    try {
+      const supabase = await createClient()
+      const { data } = await supabase
+        .from('portfolio_items')
+        .select('section_name, display_order')
+        .eq('enabled', true)
+        .order('display_order', { ascending: true })
+        .limit(1)
+        .single()
+
+      if (data) {
+        return {
+          id: 'fallback',
+          section_name: data.section_name || 'Portfolio',
+          title: 'Our Portfolio',
+          subtitle: 'Showcasing our best work and successful projects',
+          title_color: null,
+          subtitle_color: null,
+          enabled: true,
+          display_order: data.display_order || 0,
+        }
+      }
+    } catch {
+      // Return default if nothing found
+      return {
+        id: 'default',
+        section_name: 'Portfolio',
+        title: 'Our Portfolio',
+        subtitle: 'Showcasing our best work and successful projects',
+        title_color: null,
+        subtitle_color: null,
+        enabled: true,
+        display_order: 0,
+      }
+    }
+    return null
+  }
+}
+
 export async function getPortfolioItems(): Promise<PortfolioItem[]> {
   try {
     const supabase = await createClient()

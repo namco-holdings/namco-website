@@ -7,6 +7,8 @@ import {
   getHeroSection,
   getAboutSection,
   getServices,
+  getPortfolioSection,
+  getPortfolioItems,
   getTestimonials,
 } from '@/lib/data'
 
@@ -16,12 +18,16 @@ export default async function Home() {
     heroSection,
     aboutSection,
     services,
+    portfolioSection,
+    portfolioItems,
     testimonials,
   ] = await Promise.all([
     getSiteSettings(),
     getHeroSection(),
     getAboutSection(),
     getServices(),
+    getPortfolioSection(),
+    getPortfolioItems(),
     getTestimonials(),
   ])
 
@@ -225,6 +231,81 @@ export default async function Home() {
                   </div>
                   <div className="text-gray-600 dark:text-gray-400">
                     <MarkdownRenderer content={service.description} />
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
+
+      {/* Portfolio Section */}
+      {portfolioSection && portfolioItems.length > 0 && (
+        <section id="portfolio" className="py-20 bg-white dark:bg-gray-900 scroll-mt-16 md:scroll-mt-20 w-full">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="text-center mb-16">
+              {portfolioSection.title && (
+                <div 
+                  className="text-4xl md:text-5xl font-bold mb-4"
+                  style={{ color: portfolioSection.title_color || undefined }}
+                >
+                  <MarkdownRenderer content={portfolioSection.title} />
+                </div>
+              )}
+              {portfolioSection.subtitle && (
+                <div 
+                  className="text-xl text-gray-600 dark:text-gray-400 max-w-2xl mx-auto"
+                  style={{ color: portfolioSection.subtitle_color || undefined }}
+                >
+                  <MarkdownRenderer content={portfolioSection.subtitle} />
+                </div>
+              )}
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+              {portfolioItems.map((item) => (
+                <div
+                  key={item.id}
+                  className="bg-gray-50 dark:bg-gray-800 rounded-lg overflow-hidden shadow-md hover:shadow-xl transition-shadow"
+                >
+                  {item.image_url && (
+                    <div className="aspect-video w-full overflow-hidden bg-gray-200 dark:bg-gray-700">
+                      <img
+                        src={item.image_url}
+                        alt={item.title}
+                        className="w-full h-full object-cover"
+                      />
+                    </div>
+                  )}
+                  <div className="p-6">
+                    {item.category && (
+                      <span className="text-sm font-medium text-blue-600 dark:text-blue-400 mb-2 block">
+                        {item.category}
+                      </span>
+                    )}
+                    <h3 
+                      className="text-xl font-semibold text-gray-900 dark:text-white mb-3"
+                      style={{ color: item.title_color || undefined }}
+                    >
+                      <MarkdownRenderer content={item.title} />
+                    </h3>
+                    {item.description && (
+                      <div 
+                        className="text-gray-600 dark:text-gray-400 mb-4"
+                        style={{ color: item.description_color || undefined }}
+                      >
+                        <MarkdownRenderer content={item.description} />
+                      </div>
+                    )}
+                    {item.project_url && (
+                      <a
+                        href={item.project_url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 font-medium"
+                      >
+                        View Project →
+                      </a>
+                    )}
                   </div>
                 </div>
               ))}

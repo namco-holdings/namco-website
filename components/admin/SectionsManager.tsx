@@ -8,7 +8,7 @@ interface UnifiedSection {
   id: string
   section_number: number
   section_name: string
-  section_type: 'hero' | 'about' | 'services' | 'testimonials'
+  section_type: 'hero' | 'about' | 'services' | 'portfolio' | 'testimonials'
   title: string
   enabled: boolean
   inNavigation: boolean
@@ -30,10 +30,11 @@ export default function SectionsManager() {
       const supabase = createClient()
       
       // Load all sections from all tables
-      const [heroData, aboutData, servicesData, testimonialsData, navItems] = await Promise.all([
+      const [heroData, aboutData, servicesData, portfolioData, testimonialsData, navItems] = await Promise.all([
         supabase.from('hero_section').select('*').order('display_order'),
         supabase.from('about_section').select('*').order('display_order'),
         supabase.from('services').select('*').order('display_order'),
+        supabase.from('portfolio_items').select('*').order('display_order'),
         supabase.from('testimonials').select('*').order('display_order'),
         supabase.from('navigation_items').select('*').eq('enabled', true),
       ])
@@ -44,7 +45,7 @@ export default function SectionsManager() {
       // Helper to add sections
       const addSections = (
         data: any[] | null,
-        type: 'hero' | 'about' | 'services' | 'testimonials',
+        type: 'hero' | 'about' | 'services' | 'portfolio' | 'testimonials',
         tableName: string
       ) => {
         if (!data) return
@@ -68,6 +69,7 @@ export default function SectionsManager() {
       addSections(heroData.data, 'hero', 'hero_section')
       addSections(aboutData.data, 'about', 'about_section')
       addSections(servicesData.data, 'services', 'services')
+      addSections(portfolioData.data, 'portfolio', 'portfolio_items')
       addSections(testimonialsData.data, 'testimonials', 'testimonials')
 
       // Sort by display_order
@@ -234,8 +236,8 @@ export default function SectionsManager() {
             <button
               onClick={() => {
                 // Show a dialog to select section type
-                const type = prompt('Enter section type (hero, about, services, testimonials):')
-                if (type && ['hero', 'about', 'services', 'testimonials'].includes(type)) {
+                const type = prompt('Enter section type (hero, about, services, portfolio, testimonials):')
+                if (type && ['hero', 'about', 'services', 'portfolio', 'testimonials'].includes(type)) {
                   setEditingSection({ id: 'new', type })
                 }
               }}
@@ -346,7 +348,7 @@ export default function SectionsManager() {
       {editingSection && (
         <SectionEditModal
           sectionId={editingSection.id}
-          sectionType={editingSection.type as 'hero' | 'about' | 'services' | 'testimonials'}
+          sectionType={editingSection.type as 'hero' | 'about' | 'services' | 'portfolio' | 'testimonials'}
           onClose={() => {
             setEditingSection(null)
             loadAllSections()
