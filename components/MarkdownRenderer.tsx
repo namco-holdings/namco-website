@@ -2,6 +2,7 @@
 
 import ReactMarkdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
+import remarkBreaks from 'remark-breaks'
 
 interface MarkdownRendererProps {
   content: string
@@ -12,7 +13,7 @@ export default function MarkdownRenderer({ content, className = '' }: MarkdownRe
   return (
     <div className={className}>
       <ReactMarkdown
-        remarkPlugins={[remarkGfm]}
+        remarkPlugins={[remarkGfm, remarkBreaks]}
         components={{
           // Customize heading styles - render as span to inherit parent styles
           h1: ({ node, ...props }) => <span {...props} />,
@@ -22,7 +23,7 @@ export default function MarkdownRenderer({ content, className = '' }: MarkdownRe
           h5: ({ node, ...props }) => <span {...props} />,
           h6: ({ node, ...props }) => <span {...props} />,
           // Customize paragraph
-          p: ({ node, ...props }) => <p className="mb-4" {...props} />,
+          p: ({ node, ...props }) => <p className="mb-4 last:mb-0" {...props} />,
           // Customize lists
           ul: ({ node, ...props }) => <ul className="list-disc list-inside mb-4 space-y-2" {...props} />,
           ol: ({ node, ...props }) => <ol className="list-decimal list-inside mb-4 space-y-2" {...props} />,

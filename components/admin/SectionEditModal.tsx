@@ -560,6 +560,82 @@ export default function SectionEditModal({
                 label="About Image"
               />
             </div>
+
+            {/* Text Colors */}
+            <div className="bg-gray-50 dark:bg-gray-700 rounded-lg p-4 space-y-4">
+              <h4 className="text-sm font-semibold text-gray-900 dark:text-white mb-3">
+                Text Colors
+              </h4>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                    Title Color
+                  </label>
+                  <div className="flex gap-2">
+                    <input
+                      type="color"
+                      name="title_color"
+                      value={formData.title_color || '#1f2937'}
+                      onChange={handleChange}
+                      className="w-16 h-10 border border-gray-300 dark:border-gray-600 rounded"
+                    />
+                    <input
+                      type="text"
+                      name="title_color"
+                      value={formData.title_color || ''}
+                      onChange={handleChange}
+                      placeholder="Leave empty for default"
+                      className="flex-1 px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
+                    />
+                  </div>
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                    Subtitle Color
+                  </label>
+                  <div className="flex gap-2">
+                    <input
+                      type="color"
+                      name="subtitle_color"
+                      value={formData.subtitle_color || '#4b5563'}
+                      onChange={handleChange}
+                      className="w-16 h-10 border border-gray-300 dark:border-gray-600 rounded"
+                    />
+                    <input
+                      type="text"
+                      name="subtitle_color"
+                      value={formData.subtitle_color || ''}
+                      onChange={handleChange}
+                      placeholder="Leave empty for default"
+                      className="flex-1 px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
+                    />
+                  </div>
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                    Content Color
+                  </label>
+                  <div className="flex gap-2">
+                    <input
+                      type="color"
+                      name="content_color"
+                      value={formData.content_color || '#4b5563'}
+                      onChange={handleChange}
+                      className="w-16 h-10 border border-gray-300 dark:border-gray-600 rounded"
+                    />
+                    <input
+                      type="text"
+                      name="content_color"
+                      value={formData.content_color || ''}
+                      onChange={handleChange}
+                      placeholder="Leave empty for default"
+                      className="flex-1 px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+
             <div className="flex items-center gap-4">
               <label className="flex items-center gap-2">
                 <input

@@ -85,6 +85,7 @@ section {
   margin-right: 0 !important;
 }
 
+/* Ensure hero section spans full width */
 section#hero {
   width: 100% !important;
   max-width: 100% !important;
@@ -95,6 +96,7 @@ section#hero {
   margin-right: 0 !important;
   padding-left: 0 !important;
   padding-right: 0 !important;
+  box-sizing: border-box !important;
 }
 
 /* Remove any container constraints from the root */

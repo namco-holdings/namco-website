@@ -36,19 +36,30 @@ export default async function Home() {
       {heroSection && (
         <section
           id="hero"
-          className={`min-h-screen flex items-center justify-center relative mt-16 md:mt-20 ${
+          className={`min-h-screen flex items-center justify-center relative w-full ${
             heroSection.background_image_url
               ? ''
               : 'bg-gradient-to-br from-blue-50 to-indigo-100 dark:from-gray-900 dark:to-gray-800'
           }`}
           style={{
-            scrollMarginTop: '64px',
+            marginTop: '80px',
+            scrollMarginTop: '80px',
+            width: '100%',
+            maxWidth: '100%',
+            marginLeft: 0,
+            marginRight: 0,
+            paddingLeft: 0,
+            paddingRight: 0,
+            position: 'relative',
+            left: 0,
+            right: 0,
             ...(heroSection.background_image_url
               ? {
                   backgroundImage: `url(${heroSection.background_image_url})`,
                   backgroundSize: 'cover',
                   backgroundPosition: 'center',
                   backgroundRepeat: 'no-repeat',
+                  backgroundAttachment: 'scroll',
                 }
               : {}),
           }}
@@ -147,7 +158,7 @@ export default async function Home() {
 
       {/* About Section */}
       {aboutSection && (
-        <section id="about" className="py-20 bg-white dark:bg-gray-900 scroll-mt-16 md:scroll-mt-20">
+        <section id="about" className="py-20 bg-white dark:bg-gray-900 scroll-mt-16 md:scroll-mt-20 w-full">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             {(aboutSection.title && aboutSection.title.trim()) && (
               <div className="text-center mb-16">
@@ -162,7 +173,7 @@ export default async function Home() {
               </div>
             )}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
-              <div className="text-gray-600 dark:text-gray-400">
+              <div style={{ color: aboutSection.content_color || undefined }}>
                 <MarkdownRenderer content={aboutSection.content} />
               </div>
               <div className="bg-gray-100 dark:bg-gray-800 rounded-lg p-8 flex items-center justify-center">
@@ -183,9 +194,9 @@ export default async function Home() {
 
       {/* Services Section */}
       {services.length > 0 && (
-        <section id="services" className="py-20 bg-gray-50 dark:bg-gray-800 scroll-mt-16 md:scroll-mt-20">
+        <section id="services" className="py-20 bg-gray-50 dark:bg-gray-800 scroll-mt-16 md:scroll-mt-20 w-full">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-              <div className="text-center mb-16">
+            <div className="text-center mb-16">
               <h2 className="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white mb-4">
                 Our Services
               </h2>
@@ -217,7 +228,7 @@ export default async function Home() {
 
       {/* Portfolio Section */}
       {portfolioItems.length > 0 && (
-        <section id="portfolio" className="py-20 bg-white dark:bg-gray-900 scroll-mt-16 md:scroll-mt-20">
+        <section id="portfolio" className="py-20 bg-white dark:bg-gray-900 scroll-mt-16 md:scroll-mt-20 w-full">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center mb-16">
               <h2 className="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white mb-4">
@@ -273,7 +284,7 @@ export default async function Home() {
 
       {/* Testimonials Section */}
       {testimonials.length > 0 && (
-        <section id="testimonials" className="py-20 bg-gray-50 dark:bg-gray-800 scroll-mt-16 md:scroll-mt-20">
+        <section id="testimonials" className="py-20 bg-gray-50 dark:bg-gray-800 scroll-mt-16 md:scroll-mt-20 w-full">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center mb-16">
               <h2 className="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white mb-4">
@@ -318,7 +329,7 @@ export default async function Home() {
       )}
 
       {/* Contact Section */}
-      <section id="contact" className="py-20 bg-white dark:bg-gray-900 scroll-mt-16 md:scroll-mt-20">
+      <section id="contact" className="py-20 bg-white dark:bg-gray-900 scroll-mt-16 md:scroll-mt-20 w-full">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
             <h2 className="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white mb-4">
