@@ -117,7 +117,6 @@ export interface Database {
           primary_cta_bg_color: string | null
           secondary_cta_text_color: string | null
           secondary_cta_bg_color: string | null
-          section_name: string | null
           enabled: boolean
           display_order: number
           created_at: string
@@ -141,7 +140,6 @@ export interface Database {
           primary_cta_bg_color?: string | null
           secondary_cta_text_color?: string | null
           secondary_cta_bg_color?: string | null
-          section_name?: string | null
           enabled?: boolean
           display_order?: number
           created_at?: string
@@ -165,7 +163,6 @@ export interface Database {
           primary_cta_bg_color?: string | null
           secondary_cta_text_color?: string | null
           secondary_cta_bg_color?: string | null
-          section_name?: string | null
           enabled?: boolean
           display_order?: number
           created_at?: string
@@ -183,7 +180,6 @@ export interface Database {
           subtitle_color: string | null
           content_color: string | null
           content_font_size: string | null
-          section_name: string | null
           enabled: boolean
           display_order: number
           created_at: string
@@ -199,7 +195,6 @@ export interface Database {
           subtitle_color?: string | null
           content_color?: string | null
           content_font_size?: string | null
-          section_name?: string | null
           enabled?: boolean
           display_order?: number
           created_at?: string
@@ -215,7 +210,6 @@ export interface Database {
           subtitle_color?: string | null
           content_color?: string | null
           content_font_size?: string | null
-          section_name?: string | null
           enabled?: boolean
           display_order?: number
           created_at?: string
@@ -230,7 +224,6 @@ export interface Database {
           icon: string | null
           title_color: string | null
           description_color: string | null
-          section_name: string | null
           enabled: boolean
           display_order: number
           created_at: string
@@ -241,7 +234,6 @@ export interface Database {
           title: string
           description: string
           icon?: string | null
-          section_name?: string | null
           enabled?: boolean
           display_order?: number
           created_at?: string
@@ -254,7 +246,6 @@ export interface Database {
           icon?: string | null
           title_color?: string | null
           description_color?: string | null
-          section_name?: string | null
           enabled?: boolean
           display_order?: number
           created_at?: string
@@ -271,7 +262,6 @@ export interface Database {
           category: string | null
           title_color: string | null
           description_color: string | null
-          section_name: string | null
           enabled: boolean
           display_order: number
           created_at: string
@@ -284,7 +274,6 @@ export interface Database {
           image_url?: string | null
           project_url?: string | null
           category?: string | null
-          section_name?: string | null
           enabled?: boolean
           display_order?: number
           created_at?: string
@@ -299,7 +288,6 @@ export interface Database {
           category?: string | null
           title_color?: string | null
           description_color?: string | null
-          section_name?: string | null
           enabled?: boolean
           display_order?: number
           created_at?: string
@@ -318,7 +306,6 @@ export interface Database {
           quote_color: string | null
           author_name_color: string | null
           author_role_color: string | null
-          section_name: string | null
           enabled: boolean
           display_order: number
           created_at: string
@@ -335,7 +322,6 @@ export interface Database {
           quote_color?: string | null
           author_name_color?: string | null
           author_role_color?: string | null
-          section_name?: string | null
           enabled?: boolean
           display_order?: number
           created_at?: string
@@ -349,7 +335,6 @@ export interface Database {
           author_company?: string | null
           author_image_url?: string | null
           rating?: number | null
-          section_name?: string | null
           enabled?: boolean
           display_order?: number
           created_at?: string
