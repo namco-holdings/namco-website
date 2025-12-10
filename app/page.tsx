@@ -464,7 +464,7 @@ export default async function Home() {
               Get In Touch
             </h2>
             <p className="text-xl text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
-              Ready to start your project? Let's talk!
+              Ready to start working with us? Let's talk!
             </p>
           </div>
           <ContactForm />
