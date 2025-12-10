@@ -96,3 +96,16 @@ section#hero {
   padding-left: 0 !important;
   padding-right: 0 !important;
 }
+
+/* Remove any container constraints from the root */
+html > body {
+  margin: 0 !important;
+  padding: 0 !important;
+  overflow-x: hidden !important;
+}
+
+/* Ensure the fragment wrapper doesn't constrain width */
+body > * {
+  width: 100% !important;
+  max-width: 100% !important;
+}
