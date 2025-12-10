@@ -221,7 +221,25 @@ function ServicesSection({ section, services }: { section: any; services: any[] 
               className="bg-white dark:bg-gray-900 p-8 rounded-lg shadow-md hover:shadow-xl transition-shadow"
             >
               {service.icon && (
-                <div className="text-4xl mb-4">{service.icon}</div>
+                <div className="text-4xl mb-4">
+                  {service.icon.startsWith('http://') || service.icon.startsWith('https://') ? (
+                    // Image URL
+                    <img 
+                      src={service.icon} 
+                      alt={service.title}
+                      className="w-16 h-16 object-contain"
+                    />
+                  ) : service.icon.startsWith('<svg') || service.icon.startsWith('data:image/svg') ? (
+                    // SVG code or data URI
+                    <div 
+                      className="w-16 h-16"
+                      dangerouslySetInnerHTML={{ __html: service.icon }}
+                    />
+                  ) : (
+                    // Emoji or text
+                    <span>{service.icon}</span>
+                  )}
+                </div>
               )}
               <div className="text-xl font-semibold text-gray-900 dark:text-white mb-3">
                 <MarkdownRenderer content={service.title} />

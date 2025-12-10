@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { createClient } from '@/lib/supabase/client'
+import ImageUpload from './ImageUpload'
 
 interface ServiceItem {
   id: string
@@ -233,18 +234,15 @@ export default function ServicesItemsManager() {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                Icon (Emoji or text)
-              </label>
-              <input
-                type="text"
+              <ImageUpload
                 value={formData.icon || ''}
-                onChange={(e) => setFormData({ ...formData, icon: e.target.value })}
-                placeholder="🌐 or ✨ or icon name"
-                className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
+                onChange={(url) => setFormData({ ...formData, icon: url })}
+                bucket="images"
+                folder="services/icons"
+                label="Service Icon"
               />
               <p className="mt-1 text-xs text-gray-500 dark:text-gray-400">
-                Use an emoji, icon identifier, or leave empty
+                Upload an icon image for this service. Recommended size: 64x64px or larger (square aspect ratio works best).
               </p>
             </div>
 
