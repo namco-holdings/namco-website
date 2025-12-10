@@ -94,6 +94,68 @@ export async function getAboutSection(): Promise<AboutSection | null> {
   }
 }
 
+export async function getServicesSection(): Promise<{
+  id: string
+  section_name: string | null
+  title: string | null
+  subtitle: string | null
+  title_color: string | null
+  subtitle_color: string | null
+  enabled: boolean
+  display_order: number
+} | null> {
+  try {
+    const supabase = await createClient()
+    const { data } = await supabase
+      .from('services_section')
+      .select('*')
+      .eq('enabled', true)
+      .order('display_order', { ascending: true })
+      .limit(1)
+      .single()
+
+    return data
+  } catch {
+    // Fallback: try to get section info from first service item
+    try {
+      const supabase = await createClient()
+      const { data } = await supabase
+        .from('services')
+        .select('section_name, display_order')
+        .eq('enabled', true)
+        .order('display_order', { ascending: true })
+        .limit(1)
+        .single()
+
+      if (data) {
+        return {
+          id: 'fallback',
+          section_name: data.section_name || 'Services',
+          title: 'Our Services',
+          subtitle: 'Comprehensive solutions tailored to your needs',
+          title_color: null,
+          subtitle_color: null,
+          enabled: true,
+          display_order: data.display_order || 0,
+        }
+      }
+    } catch {
+      // Return default if nothing found
+      return {
+        id: 'default',
+        section_name: 'Services',
+        title: 'Our Services',
+        subtitle: 'Comprehensive solutions tailored to your needs',
+        title_color: null,
+        subtitle_color: null,
+        enabled: true,
+        display_order: 0,
+      }
+    }
+    return null
+  }
+}
+
 export async function getServices(): Promise<Service[]> {
   try {
     const supabase = await createClient()
@@ -206,10 +268,10 @@ export async function getAllSectionsOrdered() {
   try {
     const supabase = await createClient()
     
-    const [heroData, aboutData, servicesData, portfolioSectionData, testimonialsData] = await Promise.all([
+    const [heroData, aboutData, servicesSectionData, portfolioSectionData, testimonialsData] = await Promise.all([
       supabase.from('hero_section').select('*').eq('enabled', true).order('display_order'),
       supabase.from('about_section').select('*').eq('enabled', true).order('display_order'),
-      supabase.from('services').select('*').eq('enabled', true).order('display_order'),
+      supabase.from('services_section').select('*').eq('enabled', true).order('display_order'),
       supabase.from('portfolio_section').select('*').eq('enabled', true).order('display_order'),
       supabase.from('testimonials').select('*').eq('enabled', true).order('display_order'),
     ])
@@ -226,16 +288,10 @@ export async function getAllSectionsOrdered() {
       allSections.push({ type: 'about', display_order: item.display_order, data: item })
     })
     
-    // Services - only add one section if there are any services
-    // Use the first service's display_order as the section order
-    if (servicesData.data && servicesData.data.length > 0) {
-      const firstService = servicesData.data[0]
-      allSections.push({ 
-        type: 'services', 
-        display_order: firstService.display_order, 
-        data: { id: 'services-section', section_name: firstService.section_name || 'Services' }
-      })
-    }
+    // Services sections - one per item
+    servicesSectionData.data?.forEach((item) => {
+      allSections.push({ type: 'services', display_order: item.display_order, data: item })
+    })
     
     // Portfolio sections - one per item
     portfolioSectionData.data?.forEach((item) => {
@@ -270,7 +326,7 @@ export async function getNavigationItems(): Promise<NavigationItem[]> {
     const [heroData, aboutData, servicesData, portfolioSectionData, testimonialsData] = await Promise.all([
       supabase.from('hero_section').select('id, section_name, display_order, enabled').eq('enabled', true).order('display_order'),
       supabase.from('about_section').select('id, section_name, display_order, enabled').eq('enabled', true).order('display_order'),
-      supabase.from('services').select('id, section_name, display_order, enabled').eq('enabled', true).order('display_order'),
+      supabase.from('services_section').select('id, section_name, display_order, enabled').eq('enabled', true).order('display_order'),
       supabase.from('portfolio_section').select('id, section_name, display_order, enabled').eq('enabled', true).order('display_order'),
       supabase.from('testimonials').select('id, section_name, display_order, enabled').eq('enabled', true).order('display_order'),
     ])

@@ -76,12 +76,11 @@ export default function SectionEditModal({
         break
       case 'services':
         setFormData({
-          title: '',
-          description: '',
-          icon: '',
           section_name: 'Services',
+          title: 'Our Services',
+          subtitle: 'Comprehensive solutions tailored to your needs',
           title_color: '',
-          description_color: '',
+          subtitle_color: '',
           enabled: true,
           display_order: 0,
         })
@@ -147,7 +146,7 @@ export default function SectionEditModal({
       case 'about':
         return 'about_section'
       case 'services':
-        return 'services'
+        return 'services_section'
       case 'portfolio':
         return 'portfolio_section'
       case 'testimonials':
@@ -898,35 +897,83 @@ export default function SectionEditModal({
                 value={formData.title || ''}
                 onChange={handleChange}
                 required
+                placeholder="e.g., Our Services"
                 className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
               />
+              <p className="mt-1 text-xs text-gray-500 dark:text-gray-400">
+                Main heading for the services section
+              </p>
             </div>
             <div>
               <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                Description *
-              </label>
-              <textarea
-                name="description"
-                value={formData.description || ''}
-                onChange={handleChange}
-                required
-                rows={4}
-                className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
-              />
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                Icon (Emoji or text)
+                Subtitle
               </label>
               <input
                 type="text"
-                name="icon"
-                value={formData.icon || ''}
+                name="subtitle"
+                value={formData.subtitle || ''}
                 onChange={handleChange}
-                placeholder="🌐"
+                placeholder="e.g., Comprehensive solutions tailored to your needs"
                 className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
               />
+              <p className="mt-1 text-xs text-gray-500 dark:text-gray-400">
+                Optional subtitle text displayed below the title
+              </p>
             </div>
+
+            {/* Text Colors */}
+            <div className="bg-gray-50 dark:bg-gray-700 rounded-lg p-4 space-y-4">
+              <h4 className="text-sm font-semibold text-gray-900 dark:text-white mb-3">
+                Text Colors
+              </h4>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                    Title Color
+                  </label>
+                  <div className="flex gap-2">
+                    <input
+                      type="color"
+                      name="title_color"
+                      value={formData.title_color || '#1f2937'}
+                      onChange={handleChange}
+                      className="w-16 h-10 border border-gray-300 dark:border-gray-600 rounded"
+                    />
+                    <input
+                      type="text"
+                      name="title_color"
+                      value={formData.title_color || ''}
+                      onChange={handleChange}
+                      placeholder="Leave empty for default"
+                      className="flex-1 px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
+                    />
+                  </div>
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                    Subtitle Color
+                  </label>
+                  <div className="flex gap-2">
+                    <input
+                      type="color"
+                      name="subtitle_color"
+                      value={formData.subtitle_color || '#4b5563'}
+                      onChange={handleChange}
+                      className="w-16 h-10 border border-gray-300 dark:border-gray-600 rounded"
+                    />
+                    <input
+                      type="text"
+                      name="subtitle_color"
+                      value={formData.subtitle_color || ''}
+                      onChange={handleChange}
+                      placeholder="Leave empty for default"
+                      className="flex-1 px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+
             <div className="flex items-center gap-4">
               <label className="flex items-center gap-2">
                 <input
@@ -950,6 +997,12 @@ export default function SectionEditModal({
                   className="w-24 px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
                 />
               </div>
+            </div>
+            <div className="mt-4 p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
+              <p className="text-sm text-blue-800 dark:text-blue-200">
+                <strong>Note:</strong> This manages the services section settings (title, subtitle, colors). 
+                To add individual service items, you'll need to manage them separately (coming soon).
+              </p>
             </div>
           </>
         )

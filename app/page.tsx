@@ -5,6 +5,7 @@ import MarkdownRenderer from '@/components/MarkdownRenderer'
 import {
   getSiteSettings,
   getAllSectionsOrdered,
+  getServicesSection,
   getServices,
   getPortfolioItems,
   getTestimonials,
@@ -179,19 +180,39 @@ function AboutSection({ section }: { section: any }) {
   )
 }
 
-function ServicesSection({ services }: { services: any[] }) {
+function ServicesSection({ section, services }: { section: any; services: any[] }) {
   if (services.length === 0) return null
   
   return (
     <section id="services" className="py-20 bg-gray-50 dark:bg-gray-800 scroll-mt-16 md:scroll-mt-20 w-full">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-16">
-          <h2 className="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white mb-4">
-            Our Services
-          </h2>
-          <p className="text-xl text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
-            Comprehensive solutions tailored to your needs
-          </p>
+          {section?.title && (
+            <div 
+              className="text-4xl md:text-5xl font-bold mb-4"
+              style={{ color: section.title_color || undefined }}
+            >
+              <MarkdownRenderer content={section.title} />
+            </div>
+          )}
+          {!section?.title && (
+            <h2 className="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white mb-4">
+              Our Services
+            </h2>
+          )}
+          {section?.subtitle && (
+            <div 
+              className="text-xl text-gray-600 dark:text-gray-400 max-w-2xl mx-auto"
+              style={{ color: section.subtitle_color || undefined }}
+            >
+              <MarkdownRenderer content={section.subtitle} />
+            </div>
+          )}
+          {!section?.subtitle && (
+            <p className="text-xl text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
+              Comprehensive solutions tailored to your needs
+            </p>
+          )}
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {services.map((service) => (
@@ -357,12 +378,14 @@ export default async function Home() {
   const [
     siteSettings,
     orderedSections,
+    servicesSection,
     services,
     portfolioItems,
     testimonials,
   ] = await Promise.all([
     getSiteSettings(),
     getAllSectionsOrdered(),
+    getServicesSection(),
     getServices(),
     getPortfolioItems(),
     getTestimonials(),
@@ -389,8 +412,14 @@ export default async function Home() {
           case 'about':
             return <AboutSection key={`about-${section.data.id}`} section={section.data} />
           case 'services':
-            // Services section needs the services array, not just the section data
-            return <ServicesSection key={`services-${section.data.id}`} services={services} />
+            // Services section needs both the section settings and the services array
+            return (
+              <ServicesSection
+                key={`services-${section.data.id}`}
+                section={servicesSection}
+                services={services}
+              />
+            )
           case 'portfolio':
             return (
               <PortfolioSection
