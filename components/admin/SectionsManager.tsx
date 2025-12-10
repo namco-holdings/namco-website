@@ -168,37 +168,58 @@ export default function SectionsManager() {
       const newIndex = direction === 'up' ? currentIndex - 1 : currentIndex + 1
       if (newIndex < 0 || newIndex >= sections.length) return
 
-      const targetSection = sections[newIndex]
-      const currentOrder = section.display_order
-      const targetOrder = targetSection.display_order
+      // Create a new array with the section moved
+      const newSections = [...sections]
+      const [movedSection] = newSections.splice(currentIndex, 1)
+      newSections.splice(newIndex, 0, movedSection)
 
-      // Swap display orders
-      await Promise.all([
-        supabase
-          .from(section.table_name)
-          .update({ display_order: targetOrder })
-          .eq('id', section.id),
-        supabase
-          .from(targetSection.table_name)
-          .update({ display_order: currentOrder })
-          .eq('id', targetSection.id),
-      ])
+      // Reassign display_order values based on new positions (starting from 0)
+      // Group updates by table to batch them efficiently
+      const updatesByTable = new Map<string, Array<{ id: string; display_order: number }>>()
 
-      // Update navigation order to match section order
-      await updateNavigationOrder()
+      newSections.forEach((s, index) => {
+        if (!updatesByTable.has(s.table_name)) {
+          updatesByTable.set(s.table_name, [])
+        }
+        updatesByTable.get(s.table_name)!.push({
+          id: s.id,
+          display_order: index,
+        })
+      })
+
+      // Execute all updates
+      await Promise.all(
+        Array.from(updatesByTable.entries()).map(([tableName, updates]) =>
+          Promise.all(
+            updates.map((update) =>
+              supabase
+                .from(tableName)
+                .update({ display_order: update.display_order })
+                .eq('id', update.id)
+            )
+          )
+        )
+      )
+
+      // Update navigation order to match section order (using the new order)
+      await updateNavigationOrder(newSections)
 
       loadAllSections()
     } catch (error) {
       console.error('Error moving section:', error)
+      alert('Failed to move section. Please try again.')
     }
   }
 
-  const updateNavigationOrder = async () => {
+  const updateNavigationOrder = async (updatedSections?: UnifiedSection[]) => {
     try {
       const supabase = createClient()
       
+      // Use provided sections or current state
+      const sectionsToUse = updatedSections || sections
+      
       // Get all enabled sections in order
-      const enabledSections = sections
+      const enabledSections = sectionsToUse
         .filter((s) => s.enabled && s.inNavigation)
         .sort((a, b) => a.display_order - b.display_order)
 
