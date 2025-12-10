@@ -164,6 +164,7 @@ export async function getServices(): Promise<Service[]> {
       .select('*')
       .eq('enabled', true)
       .order('display_order', { ascending: true })
+      .order('created_at', { ascending: true })
 
     return data || []
   } catch {

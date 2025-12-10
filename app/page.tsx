@@ -220,7 +220,7 @@ function ServicesSection({ section, services }: { section: any; services: any[] 
               key={service.id}
               className="bg-white dark:bg-gray-900 p-6 rounded-lg shadow-md hover:shadow-xl transition-shadow flex flex-col items-center text-center"
             >
-              {service.icon && (
+              {service.icon && (service.icon.startsWith('http://') || service.icon.startsWith('https://') || service.icon.startsWith('<svg') || service.icon.startsWith('data:image/svg')) && (
                 <div className="mb-4 flex justify-center items-center">
                   {service.icon.startsWith('http://') || service.icon.startsWith('https://') ? (
                     // Image URL
@@ -235,10 +235,7 @@ function ServicesSection({ section, services }: { section: any; services: any[] 
                       className="w-16 h-16 flex items-center justify-center"
                       dangerouslySetInnerHTML={{ __html: service.icon }}
                     />
-                  ) : (
-                    // Emoji or text
-                    <span className="text-4xl">{service.icon}</span>
-                  )}
+                  ) : null}
                 </div>
               )}
               <div className="text-lg font-semibold text-gray-900 dark:text-white mb-2">

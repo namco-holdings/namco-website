@@ -42,6 +42,7 @@ export default function ServicesItemsManager() {
         .from('services')
         .select('*')
         .order('display_order', { ascending: true })
+        .order('created_at', { ascending: true })
 
       if (error) throw error
       setItems(data || [])
@@ -68,8 +69,19 @@ export default function ServicesItemsManager() {
           .eq('id', editingItem.id)
         if (error) throw error
       } else {
+        // For new items, set display_order to the max + 1 (so it appears at the end initially)
+        // But since we sort by created_at first, new items will appear in creation order
+        const { data: existingItems } = await supabase
+          .from('services')
+          .select('display_order')
+          .order('display_order', { ascending: false })
+          .limit(1)
+        
+        const maxOrder = existingItems && existingItems.length > 0 ? existingItems[0].display_order : -1
+        
         const insertData = {
           ...formData,
+          display_order: maxOrder + 1,
           created_at: new Date().toISOString(),
           updated_at: new Date().toISOString(),
         }
@@ -156,20 +168,26 @@ export default function ServicesItemsManager() {
       const newIndex = direction === 'up' ? currentIndex - 1 : currentIndex + 1
       if (newIndex < 0 || newIndex >= items.length) return
 
-      const targetItem = items[newIndex]
-      const currentOrder = item.display_order
-      const targetOrder = targetItem.display_order
+      // Create a new array with the item moved
+      const newItems = [...items]
+      const [movedItem] = newItems.splice(currentIndex, 1)
+      newItems.splice(newIndex, 0, movedItem)
 
-      await Promise.all([
-        supabase
-          .from('services')
-          .update({ display_order: targetOrder })
-          .eq('id', item.id),
-        supabase
-          .from('services')
-          .update({ display_order: currentOrder })
-          .eq('id', targetItem.id),
-      ])
+      // Reassign display_order values based on new positions (starting from 0)
+      const updates = newItems.map((s, index) => ({
+        id: s.id,
+        display_order: index,
+      }))
+
+      // Execute all updates
+      await Promise.all(
+        updates.map((update) =>
+          supabase
+            .from('services')
+            .update({ display_order: update.display_order, updated_at: new Date().toISOString() })
+            .eq('id', update.id)
+        )
+      )
 
       loadItems()
     } catch (error: any) {
