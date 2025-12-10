@@ -154,12 +154,13 @@ export default async function Home() {
                 <div className="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white mb-4">
                   <MarkdownRenderer content={aboutSection.title} />
                 </div>
-              {aboutSection.subtitle && (
-                <div className="text-xl text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
-                  <MarkdownRenderer content={aboutSection.subtitle} />
-                </div>
-              )}
-            </div>
+                {aboutSection.subtitle && (
+                  <div className="text-xl text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
+                    <MarkdownRenderer content={aboutSection.subtitle} />
+                  </div>
+                )}
+              </div>
+            )}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
               <div className="text-gray-600 dark:text-gray-400">
                 <MarkdownRenderer content={aboutSection.content} />
@@ -184,7 +185,7 @@ export default async function Home() {
       {services.length > 0 && (
         <section id="services" className="py-20 bg-gray-50 dark:bg-gray-800 scroll-mt-16 md:scroll-mt-20">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="text-center mb-16">
+              <div className="text-center mb-16">
               <h2 className="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white mb-4">
                 Our Services
               </h2>
