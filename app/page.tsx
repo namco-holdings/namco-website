@@ -7,7 +7,6 @@ import {
   getHeroSection,
   getAboutSection,
   getServices,
-  getPortfolioItems,
   getTestimonials,
 } from '@/lib/data'
 
@@ -17,14 +16,12 @@ export default async function Home() {
     heroSection,
     aboutSection,
     services,
-    portfolioItems,
     testimonials,
   ] = await Promise.all([
     getSiteSettings(),
     getHeroSection(),
     getAboutSection(),
     getServices(),
-    getPortfolioItems(),
     getTestimonials(),
   ])
 
@@ -228,62 +225,6 @@ export default async function Home() {
                   </div>
                   <div className="text-gray-600 dark:text-gray-400">
                     <MarkdownRenderer content={service.description} />
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </section>
-      )}
-
-      {/* Portfolio Section */}
-      {portfolioItems.length > 0 && (
-        <section id="portfolio" className="py-20 bg-white dark:bg-gray-900 scroll-mt-16 md:scroll-mt-20 w-full">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="text-center mb-16">
-              <h2 className="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white mb-4">
-                Our Portfolio
-              </h2>
-              <p className="text-xl text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
-                Showcasing our best work and successful projects
-              </p>
-            </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {portfolioItems.map((item) => (
-                <div
-                  key={item.id}
-                  className="bg-gray-100 dark:bg-gray-800 rounded-lg overflow-hidden shadow-md hover:shadow-xl transition-shadow"
-                >
-                  <div className="h-48 bg-gradient-to-br from-blue-400 to-purple-500 flex items-center justify-center">
-                    {item.image_url ? (
-                      <img
-                        src={item.image_url}
-                        alt={item.title}
-                        className="w-full h-full object-cover"
-                      />
-                    ) : (
-                      <p className="text-white text-lg font-semibold">{item.title}</p>
-                    )}
-                  </div>
-                  <div className="p-6">
-                    <div className="text-xl font-semibold text-gray-900 dark:text-white mb-2">
-                      <MarkdownRenderer content={item.title} />
-                    </div>
-                    {item.description && (
-                      <div className="text-gray-600 dark:text-gray-400">
-                        <MarkdownRenderer content={item.description} />
-                      </div>
-                    )}
-                    {item.project_url && (
-                      <a
-                        href={item.project_url}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="mt-4 inline-block text-blue-600 dark:text-blue-400 hover:underline"
-                      >
-                        View Project →
-                      </a>
-                    )}
                   </div>
                 </div>
               ))}
