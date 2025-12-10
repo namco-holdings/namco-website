@@ -142,13 +142,58 @@ export async function getTestimonials(): Promise<Testimonial[]> {
 export async function getNavigationItems(): Promise<NavigationItem[]> {
   try {
     const supabase = await createClient()
-    const { data } = await supabase
+    const { data: navItems } = await supabase
       .from('navigation_items')
       .select('*')
       .eq('enabled', true)
       .order('display_order', { ascending: true })
 
-    return data || []
+    if (!navItems || navItems.length === 0) return []
+
+    // Fetch section names from actual sections based on section_type
+    const navItemsWithNames = await Promise.all(
+      navItems.map(async (item) => {
+        // section_id in navigation_items stores the section type (hero, about, etc.)
+        const sectionType = item.section_id
+        
+        // Map section type to table
+        const tableMap: Record<string, string> = {
+          'hero': 'hero_section',
+          'about': 'about_section',
+          'services': 'services',
+          'portfolio': 'portfolio_items',
+          'testimonials': 'testimonials',
+        }
+
+        const tableName = tableMap[sectionType]
+        if (tableName) {
+          // Get the first enabled section of this type
+          const { data } = await supabase
+            .from(tableName)
+            .select('section_name')
+            .eq('enabled', true)
+            .order('display_order', { ascending: true })
+            .limit(1)
+            .single()
+
+          if (data && data.section_name) {
+            // Update navigation item label if section_name changed
+            if (item.label !== data.section_name) {
+              await supabase
+                .from('navigation_items')
+                .update({ label: data.section_name })
+                .eq('id', item.id)
+            }
+            return { ...item, label: data.section_name }
+          }
+        }
+
+        // Fallback to original label if section not found
+        return item
+      })
+    )
+
+    return navItemsWithNames
   } catch {
     return []
   }
