@@ -60,6 +60,7 @@ export default function SectionEditModal({
           title_color: '',
           subtitle_color: '',
           content_color: '',
+          content_font_size: '',
           enabled: true,
           display_order: 0,
         })
@@ -634,6 +635,48 @@ export default function SectionEditModal({
                   </div>
                 </div>
               </div>
+            </div>
+
+            {/* Content Font Size */}
+            <div>
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                Content Font Size
+              </label>
+              <div className="flex gap-2 items-center">
+                <input
+                  type="text"
+                  name="content_font_size"
+                  value={formData.content_font_size || ''}
+                  onChange={handleChange}
+                  placeholder="e.g., 16px, 1rem, 1.2em (leave empty for default)"
+                  className="flex-1 px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
+                />
+                <select
+                  name="content_font_size_preset"
+                  value=""
+                  onChange={(e) => {
+                    if (e.target.value) {
+                      setFormData({ ...formData, content_font_size: e.target.value })
+                      // Reset the select to show placeholder
+                      e.target.value = ''
+                    }
+                  }}
+                  className="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
+                >
+                  <option value="">Preset sizes...</option>
+                  <option value="12px">Small (12px)</option>
+                  <option value="14px">Small-Medium (14px)</option>
+                  <option value="16px">Medium (16px)</option>
+                  <option value="18px">Medium-Large (18px)</option>
+                  <option value="20px">Large (20px)</option>
+                  <option value="1rem">1rem</option>
+                  <option value="1.2rem">1.2rem</option>
+                  <option value="1.5rem">1.5rem</option>
+                </select>
+              </div>
+              <p className="mt-1 text-xs text-gray-500 dark:text-gray-400">
+                Enter a CSS font size value (px, rem, em) or use a preset from the dropdown
+              </p>
             </div>
 
             <div className="flex items-center gap-4">
