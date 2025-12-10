@@ -201,6 +201,67 @@ export async function getTestimonials(): Promise<Testimonial[]> {
   }
 }
 
+// Get all sections ordered by display_order for page rendering
+export async function getAllSectionsOrdered() {
+  try {
+    const supabase = await createClient()
+    
+    const [heroData, aboutData, servicesData, portfolioSectionData, testimonialsData] = await Promise.all([
+      supabase.from('hero_section').select('*').eq('enabled', true).order('display_order'),
+      supabase.from('about_section').select('*').eq('enabled', true).order('display_order'),
+      supabase.from('services').select('*').eq('enabled', true).order('display_order'),
+      supabase.from('portfolio_section').select('*').eq('enabled', true).order('display_order'),
+      supabase.from('testimonials').select('*').eq('enabled', true).order('display_order'),
+    ])
+
+    const allSections: Array<{ type: string; display_order: number; data: any }> = []
+    
+    // Hero sections - one per item
+    heroData.data?.forEach((item) => {
+      allSections.push({ type: 'hero', display_order: item.display_order, data: item })
+    })
+    
+    // About sections - one per item
+    aboutData.data?.forEach((item) => {
+      allSections.push({ type: 'about', display_order: item.display_order, data: item })
+    })
+    
+    // Services - only add one section if there are any services
+    // Use the first service's display_order as the section order
+    if (servicesData.data && servicesData.data.length > 0) {
+      const firstService = servicesData.data[0]
+      allSections.push({ 
+        type: 'services', 
+        display_order: firstService.display_order, 
+        data: { id: 'services-section', section_name: firstService.section_name || 'Services' }
+      })
+    }
+    
+    // Portfolio sections - one per item
+    portfolioSectionData.data?.forEach((item) => {
+      allSections.push({ type: 'portfolio', display_order: item.display_order, data: item })
+    })
+    
+    // Testimonials - only add one section if there are any testimonials
+    // Use the first testimonial's display_order as the section order
+    if (testimonialsData.data && testimonialsData.data.length > 0) {
+      const firstTestimonial = testimonialsData.data[0]
+      allSections.push({ 
+        type: 'testimonials', 
+        display_order: firstTestimonial.display_order, 
+        data: { id: 'testimonials-section', section_name: firstTestimonial.section_name || 'Testimonials' }
+      })
+    }
+
+    // Sort by display_order
+    allSections.sort((a, b) => a.display_order - b.display_order)
+
+    return allSections
+  } catch {
+    return []
+  }
+}
+
 export async function getNavigationItems(): Promise<NavigationItem[]> {
   try {
     const supabase = await createClient()
@@ -292,4 +353,3 @@ export async function getFooterContent(): Promise<FooterContent[]> {
     return []
   }
 }
-

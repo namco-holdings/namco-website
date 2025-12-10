@@ -177,8 +177,16 @@ export default function SectionEditModal({
 
       if (sectionId === 'new') {
         // New section - insert into selected table
-        const { error } = await supabase.from(newTableName).insert(formData)
-        if (error) throw error
+        const insertData = {
+          ...formData,
+          created_at: new Date().toISOString(),
+          updated_at: new Date().toISOString(),
+        }
+        const { error } = await supabase.from(newTableName).insert(insertData)
+        if (error) {
+          console.error('Insert error:', error)
+          throw error
+        }
         setMessage({ type: 'success', text: 'Section created successfully!' })
       } else {
         // Existing section - check if type changed
@@ -242,11 +250,19 @@ export default function SectionEditModal({
           setMessage({ type: 'success', text: 'Section updated and moved successfully!' })
         } else {
           // Same type - just update
+          // Ensure updated_at is set
+          const updateData = {
+            ...formData,
+            updated_at: new Date().toISOString(),
+          }
           const { error } = await supabase
             .from(newTableName)
-            .update(formData)
+            .update(updateData)
             .eq('id', sectionId)
-          if (error) throw error
+          if (error) {
+            console.error('Update error:', error)
+            throw error
+          }
           setMessage({ type: 'success', text: 'Section updated successfully!' })
         }
       }
