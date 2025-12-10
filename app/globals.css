@@ -27,12 +27,20 @@
 
 html {
   scroll-behavior: smooth;
+  margin: 0 !important;
+  padding: 0 !important;
+  width: 100% !important;
+  overflow-x: hidden !important;
 }
 
 body {
   color: var(--text-color);
   background: var(--background-color);
   font-family: Arial, Helvetica, sans-serif;
+  margin: 0 !important;
+  padding: 0 !important;
+  width: 100% !important;
+  overflow-x: hidden !important;
 }
 
 /* Utility classes for using CSS variables */
@@ -58,3 +66,33 @@ body {
   }
 }
 
+/* Ensure full-width sections and remove any container constraints */
+* {
+  box-sizing: border-box;
+}
+
+#__next,
+#__next > *,
+body > * {
+  width: 100% !important;
+  max-width: 100% !important;
+}
+
+section {
+  width: 100% !important;
+  max-width: 100% !important;
+  margin-left: 0 !important;
+  margin-right: 0 !important;
+}
+
+section#hero {
+  width: 100% !important;
+  max-width: 100% !important;
+  position: relative !important;
+  left: 0 !important;
+  right: 0 !important;
+  margin-left: 0 !important;
+  margin-right: 0 !important;
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+}
