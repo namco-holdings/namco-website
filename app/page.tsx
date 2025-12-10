@@ -240,11 +240,11 @@ export default async function Home() {
       )}
 
       {/* Portfolio Section */}
-      {portfolioSection && portfolioItems.length > 0 && (
+      {portfolioItems.length > 0 && (
         <section id="portfolio" className="py-20 bg-white dark:bg-gray-900 scroll-mt-16 md:scroll-mt-20 w-full">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center mb-16">
-              {portfolioSection.title && (
+              {portfolioSection?.title && (
                 <div 
                   className="text-4xl md:text-5xl font-bold mb-4"
                   style={{ color: portfolioSection.title_color || undefined }}
@@ -252,12 +252,22 @@ export default async function Home() {
                   <MarkdownRenderer content={portfolioSection.title} />
                 </div>
               )}
-              {portfolioSection.subtitle && (
+              {!portfolioSection?.title && (
+                <div className="text-4xl md:text-5xl font-bold mb-4 text-gray-900 dark:text-white">
+                  Our Portfolio
+                </div>
+              )}
+              {portfolioSection?.subtitle && (
                 <div 
                   className="text-xl text-gray-600 dark:text-gray-400 max-w-2xl mx-auto"
                   style={{ color: portfolioSection.subtitle_color || undefined }}
                 >
                   <MarkdownRenderer content={portfolioSection.subtitle} />
+                </div>
+              )}
+              {!portfolioSection?.subtitle && (
+                <div className="text-xl text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
+                  Showcasing our best work and successful projects
                 </div>
               )}
             </div>
