@@ -176,6 +176,7 @@ export interface Database {
           title_color: string | null
           subtitle_color: string | null
           content_color: string | null
+          content_font_size: string | null
           enabled: boolean
           display_order: number
           created_at: string
@@ -190,6 +191,7 @@ export interface Database {
           title_color?: string | null
           subtitle_color?: string | null
           content_color?: string | null
+          content_font_size?: string | null
           enabled?: boolean
           display_order?: number
           created_at?: string
