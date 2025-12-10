@@ -95,22 +95,14 @@ export default function SectionsManager() {
           .eq('section_id', section.section_type)
       } else {
         // Add to navigation - use section_name as label, section_type as section_id for scrolling
-        // Get max display_order from existing nav items
-        const { data: existingNav } = await supabase
-          .from('navigation_items')
-          .select('display_order')
-          .order('display_order', { ascending: false })
-          .limit(1)
-        
-        const maxOrder = existingNav && existingNav.length > 0 ? existingNav[0].display_order : 0
-        
+        // Use the section's display_order to maintain order
         await supabase
           .from('navigation_items')
           .insert({
             label: section.section_name,
             section_id: section.section_type, // Use section type for scrolling compatibility
             enabled: true,
-            display_order: maxOrder + 1,
+            display_order: section.display_order, // Match section order
           })
       }
 
