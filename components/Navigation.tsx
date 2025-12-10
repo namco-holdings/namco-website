@@ -7,14 +7,10 @@ export default async function Navigation() {
     getSiteSettings(),
   ])
 
-  // Fallback to default navigation if database is empty
-  const defaultNavItems = [
-    { id: '1', label: 'Home', section_id: 'hero' },
-    { id: '2', label: 'About', section_id: 'about' },
-    { id: '3', label: 'Services', section_id: 'services' },
-    { id: '4', label: 'Portfolio', section_id: 'portfolio' },
-    { id: '5', label: 'Testimonials', section_id: 'testimonials' },
-    { id: '6', label: 'Contact', section_id: 'contact' },
+  // Always add Contact as the last item, right-justified
+  const navItemsWithContact = [
+    ...navItems,
+    { id: 'contact', label: 'Contact', section_id: 'contact' },
   ]
 
   return (
@@ -23,7 +19,7 @@ export default async function Navigation() {
       logoUrl={siteSettings.logo_url}
       headerBackgroundColor={siteSettings.header_background_color || '#ffffff'}
       headerTextColor={siteSettings.header_text_color || '#171717'}
-      navItems={navItems.length > 0 ? navItems : defaultNavItems}
+      navItems={navItemsWithContact}
     />
   )
 }
