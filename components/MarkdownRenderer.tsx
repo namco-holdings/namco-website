@@ -22,7 +22,7 @@ export default function MarkdownRenderer({ content, className = '' }: MarkdownRe
           h4: ({ node, ...props }) => <span {...props} />,
           h5: ({ node, ...props }) => <span {...props} />,
           h6: ({ node, ...props }) => <span {...props} />,
-          // Customize paragraph
+          // Customize paragraph - add spacing between paragraphs
           p: ({ node, ...props }) => <p className="mb-4 last:mb-0" {...props} />,
           // Customize lists
           ul: ({ node, ...props }) => <ul className="list-disc list-inside mb-4 space-y-2" {...props} />,
@@ -62,4 +62,3 @@ export default function MarkdownRenderer({ content, className = '' }: MarkdownRe
     </div>
   )
 }
-
