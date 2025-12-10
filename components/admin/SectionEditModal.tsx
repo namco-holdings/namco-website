@@ -12,12 +12,17 @@ interface SectionEditModalProps {
 
 export default function SectionEditModal({
   sectionId,
-  sectionType,
+  sectionType: initialSectionType,
   onClose,
 }: SectionEditModalProps) {
   const [loading, setLoading] = useState(false)
   const [formData, setFormData] = useState<any>({})
   const [message, setMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null)
+  const [currentSectionType, setCurrentSectionType] = useState<'hero' | 'about' | 'services' | 'portfolio' | 'testimonials'>(initialSectionType)
+
+  useEffect(() => {
+    setCurrentSectionType(initialSectionType)
+  }, [initialSectionType])
 
   useEffect(() => {
     if (sectionId !== 'new') {
@@ -26,14 +31,16 @@ export default function SectionEditModal({
       // Initialize empty form for new section
       initializeEmptyForm()
     }
-  }, [sectionId, sectionType])
+  }, [sectionId, currentSectionType])
 
-  const initializeEmptyForm = () => {
-    switch (sectionType) {
+  const initializeEmptyForm = (type?: 'hero' | 'about' | 'services' | 'portfolio' | 'testimonials') => {
+    const typeToUse = type || currentSectionType
+    switch (typeToUse) {
       case 'hero':
         setFormData({
           title: '',
           subtitle: '',
+          section_name: 'Home',
           primary_cta_text: '',
           primary_cta_link: '#contact',
           secondary_cta_text: '',
@@ -58,6 +65,7 @@ export default function SectionEditModal({
           subtitle: '',
           content: '',
           image_url: '',
+          section_name: 'About',
           title_color: '',
           subtitle_color: '',
           content_color: '',
@@ -71,6 +79,7 @@ export default function SectionEditModal({
           title: '',
           description: '',
           icon: '',
+          section_name: 'Services',
           title_color: '',
           description_color: '',
           enabled: true,
@@ -84,6 +93,7 @@ export default function SectionEditModal({
           image_url: '',
           project_url: '',
           category: '',
+          section_name: 'Portfolio',
           title_color: '',
           description_color: '',
           enabled: true,
@@ -100,6 +110,7 @@ export default function SectionEditModal({
           author_role: '',
           author_company: '',
           author_image_url: '',
+          section_name: 'Testimonials',
           rating: 5,
           enabled: true,
           display_order: 0,
@@ -119,15 +130,21 @@ export default function SectionEditModal({
         .single()
 
       if (error) throw error
-      if (data) setFormData(data)
+      if (data) {
+        setFormData(data)
+        // Ensure currentSectionType matches the loaded section type
+        // We'll determine this from which table it came from
+        setCurrentSectionType(initialSectionType)
+      }
     } catch (error) {
       console.error('Error loading section:', error)
       setMessage({ type: 'error', text: 'Failed to load section' })
     }
   }
 
-  const getTableName = () => {
-    switch (sectionType) {
+  const getTableName = (type?: string): string => {
+    const typeToUse = type || currentSectionType
+    switch (typeToUse) {
       case 'hero':
         return 'hero_section'
       case 'about':
@@ -138,7 +155,17 @@ export default function SectionEditModal({
         return 'portfolio_items'
       case 'testimonials':
         return 'testimonials'
+      default:
+        return 'hero_section' // fallback
     }
+  }
+
+  const handleTypeChange = (newType: 'hero' | 'about' | 'services' | 'portfolio' | 'testimonials') => {
+    if (newType === currentSectionType) return
+    
+    // If changing type, reinitialize form with new type defaults
+    setCurrentSectionType(newType)
+    initializeEmptyForm(newType)
   }
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -148,19 +175,83 @@ export default function SectionEditModal({
 
     try {
       const supabase = createClient()
-      const tableName = getTableName()
+      const newTableName = getTableName()
+      const oldTableName = sectionId !== 'new' ? getTableName(initialSectionType) : null
 
       if (sectionId === 'new') {
-        const { error } = await supabase.from(tableName).insert(formData)
+        // New section - insert into selected table
+        const { error } = await supabase.from(newTableName).insert(formData)
         if (error) throw error
         setMessage({ type: 'success', text: 'Section created successfully!' })
       } else {
-        const { error } = await supabase
-          .from(tableName)
-          .update(formData)
-          .eq('id', sectionId)
-        if (error) throw error
-        setMessage({ type: 'success', text: 'Section updated successfully!' })
+        // Existing section - check if type changed
+        if (currentSectionType !== initialSectionType && oldTableName) {
+          // Type changed - need to move section between tables
+          // First, get the old section data
+          const { data: oldData } = await supabase
+            .from(oldTableName)
+            .select('*')
+            .eq('id', sectionId)
+            .single()
+
+          if (!oldData) {
+            throw new Error('Original section not found')
+          }
+
+          // Delete from old table
+          const { error: deleteError } = await supabase
+            .from(oldTableName)
+            .delete()
+            .eq('id', sectionId)
+          
+          if (deleteError) throw deleteError
+
+          // Remove from navigation if it was there
+          await supabase
+            .from('navigation_items')
+            .delete()
+            .eq('section_id', initialSectionType)
+
+          // Insert into new table with updated data
+          const { error: insertError } = await supabase
+            .from(newTableName)
+            .insert({
+              ...formData,
+              id: sectionId, // Keep the same ID
+            })
+          
+          if (insertError) throw insertError
+
+          // Re-add to navigation if it was enabled
+          if (formData.enabled) {
+            const { data: navItems } = await supabase
+              .from('navigation_items')
+              .select('display_order')
+              .order('display_order', { ascending: false })
+              .limit(1)
+            
+            const maxOrder = navItems && navItems.length > 0 ? navItems[0].display_order : 0
+            
+            await supabase
+              .from('navigation_items')
+              .insert({
+                label: formData.section_name || currentSectionType,
+                section_id: currentSectionType,
+                enabled: true,
+                display_order: maxOrder + 1,
+              })
+          }
+
+          setMessage({ type: 'success', text: 'Section updated and moved successfully!' })
+        } else {
+          // Same type - just update
+          const { error } = await supabase
+            .from(newTableName)
+            .update(formData)
+            .eq('id', sectionId)
+          if (error) throw error
+          setMessage({ type: 'success', text: 'Section updated successfully!' })
+        }
       }
 
       setTimeout(() => {
@@ -183,10 +274,28 @@ export default function SectionEditModal({
   }
 
   const renderFormFields = () => {
-    switch (sectionType) {
+    switch (currentSectionType) {
       case 'hero':
         return (
           <>
+            {/* Section Name */}
+            <div>
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                Section Name *
+              </label>
+              <input
+                type="text"
+                name="section_name"
+                value={formData.section_name || ''}
+                onChange={handleChange}
+                required
+                placeholder="e.g., Home, Welcome, Introduction"
+                className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
+              />
+              <p className="mt-1 text-xs text-gray-500 dark:text-gray-400">
+                This name will appear in navigation if the section is included
+              </p>
+            </div>
             <div>
               <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                 Title *
@@ -535,6 +644,24 @@ export default function SectionEditModal({
       case 'about':
         return (
           <>
+            {/* Section Name */}
+            <div>
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                Section Name *
+              </label>
+              <input
+                type="text"
+                name="section_name"
+                value={formData.section_name || ''}
+                onChange={handleChange}
+                required
+                placeholder="e.g., About, Our Story, Who We Are"
+                className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
+              />
+              <p className="mt-1 text-xs text-gray-500 dark:text-gray-400">
+                This name will appear in navigation if the section is included
+              </p>
+            </div>
             <div>
               <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                 Title *
@@ -730,6 +857,24 @@ export default function SectionEditModal({
       case 'services':
         return (
           <>
+            {/* Section Name */}
+            <div>
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                Section Name *
+              </label>
+              <input
+                type="text"
+                name="section_name"
+                value={formData.section_name || ''}
+                onChange={handleChange}
+                required
+                placeholder="e.g., Services, What We Offer, Our Services"
+                className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
+              />
+              <p className="mt-1 text-xs text-gray-500 dark:text-gray-400">
+                This name will appear in navigation if the section is included
+              </p>
+            </div>
             <div>
               <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                 Title *
@@ -799,6 +944,24 @@ export default function SectionEditModal({
       case 'portfolio':
         return (
           <>
+            {/* Section Name */}
+            <div>
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                Section Name *
+              </label>
+              <input
+                type="text"
+                name="section_name"
+                value={formData.section_name || ''}
+                onChange={handleChange}
+                required
+                placeholder="e.g., Portfolio, Our Work, Projects"
+                className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
+              />
+              <p className="mt-1 text-xs text-gray-500 dark:text-gray-400">
+                This name will appear in navigation if the section is included
+              </p>
+            </div>
             <div>
               <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                 Title *
@@ -887,6 +1050,24 @@ export default function SectionEditModal({
       case 'testimonials':
         return (
           <>
+            {/* Section Name */}
+            <div>
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                Section Name *
+              </label>
+              <input
+                type="text"
+                name="section_name"
+                value={formData.section_name || ''}
+                onChange={handleChange}
+                required
+                placeholder="e.g., Testimonials, What Clients Say, Reviews"
+                className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
+              />
+              <p className="mt-1 text-xs text-gray-500 dark:text-gray-400">
+                This name will appear in navigation if the section is included
+              </p>
+            </div>
             <div>
               <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                 Quote *
@@ -1002,7 +1183,7 @@ export default function SectionEditModal({
       >
         <div className="flex justify-between items-center mb-6">
           <h3 className="text-xl font-semibold text-gray-900 dark:text-white">
-            {sectionId === 'new' ? `Create New ${sectionType.charAt(0).toUpperCase() + sectionType.slice(1)}` : `Edit ${sectionType.charAt(0).toUpperCase() + sectionType.slice(1)}`}
+            {sectionId === 'new' ? 'Create New Section' : 'Edit Section'}
           </h3>
           <button
             onClick={onClose}
@@ -1025,6 +1206,27 @@ export default function SectionEditModal({
         )}
 
         <form onSubmit={handleSubmit} className="space-y-4">
+          {/* Section Type Selector */}
+          <div>
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+              Section Type *
+            </label>
+            <select
+              value={currentSectionType}
+              onChange={(e) => handleTypeChange(e.target.value as 'hero' | 'about' | 'services' | 'portfolio' | 'testimonials')}
+              className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
+            >
+              <option value="hero">Hero Section</option>
+              <option value="about">Image with Text (About)</option>
+              <option value="services">Services</option>
+              <option value="portfolio">Portfolio Items</option>
+              <option value="testimonials">Testimonials</option>
+            </select>
+            <p className="mt-1 text-xs text-gray-500 dark:text-gray-400">
+              Choose the type of section. Changing this will update the available fields.
+            </p>
+          </div>
+
           {renderFormFields()}
 
           <div className="flex justify-end gap-4 pt-4 border-t border-gray-200 dark:border-gray-700">

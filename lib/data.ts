@@ -142,13 +142,62 @@ export async function getTestimonials(): Promise<Testimonial[]> {
 export async function getNavigationItems(): Promise<NavigationItem[]> {
   try {
     const supabase = await createClient()
-    const { data } = await supabase
-      .from('navigation_items')
-      .select('*')
-      .eq('enabled', true)
-      .order('display_order', { ascending: true })
+    
+    // Get all enabled sections from all tables, ordered by display_order
+    const [heroData, aboutData, servicesData, portfolioData, testimonialsData] = await Promise.all([
+      supabase.from('hero_section').select('id, section_name, display_order, enabled').eq('enabled', true).order('display_order'),
+      supabase.from('about_section').select('id, section_name, display_order, enabled').eq('enabled', true).order('display_order'),
+      supabase.from('services').select('id, section_name, display_order, enabled').eq('enabled', true).order('display_order'),
+      supabase.from('portfolio_items').select('id, section_name, display_order, enabled').eq('enabled', true).order('display_order'),
+      supabase.from('testimonials').select('id, section_name, display_order, enabled').eq('enabled', true).order('display_order'),
+    ])
 
-    return data || []
+    // Combine all sections
+    const allSections: Array<{ id: string; section_name: string | null; display_order: number; type: string }> = []
+    
+    const addSections = (data: any[] | null, type: string) => {
+      if (!data) return
+      data.forEach((item) => {
+        allSections.push({
+          id: item.id,
+          section_name: item.section_name,
+          display_order: item.display_order,
+          type,
+        })
+      })
+    }
+
+    addSections(heroData.data, 'hero')
+    addSections(aboutData.data, 'about')
+    addSections(servicesData.data, 'services')
+    addSections(portfolioData.data, 'portfolio')
+    addSections(testimonialsData.data, 'testimonials')
+
+    // Sort by display_order
+    allSections.sort((a, b) => a.display_order - b.display_order)
+
+    // Get navigation items to check which sections are in navigation
+    const { data: navItems } = await supabase
+      .from('navigation_items')
+      .select('section_id')
+      .eq('enabled', true)
+
+    const navSectionTypes = new Set(navItems?.map((item) => item.section_id) || [])
+
+    // Build navigation items from sections that are in navigation, maintaining section order
+    const navigationItems: NavigationItem[] = allSections
+      .filter((section) => navSectionTypes.has(section.type))
+      .map((section, index) => ({
+        id: `nav-${section.id}`,
+        label: section.section_name || section.type,
+        section_id: section.type,
+        enabled: true,
+        display_order: section.display_order, // Use section's display_order
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString(),
+      }))
+
+    return navigationItems
   } catch {
     return []
   }

@@ -4,85 +4,78 @@ import { useState, useEffect } from 'react'
 import { createClient } from '@/lib/supabase/client'
 import SectionEditModal from './SectionEditModal'
 
-interface Section {
+interface UnifiedSection {
   id: string
-  type: 'hero' | 'about' | 'services' | 'portfolio' | 'testimonials'
+  section_number: number
+  section_name: string
+  section_type: 'hero' | 'about' | 'services' | 'portfolio' | 'testimonials'
   title: string
   enabled: boolean
   inNavigation: boolean
   display_order: number
+  table_name: string
 }
 
 export default function SectionsManager() {
-  const [sections, setSections] = useState<Section[]>([])
+  const [sections, setSections] = useState<UnifiedSection[]>([])
   const [loading, setLoading] = useState(true)
-  const [activeTab, setActiveTab] = useState<'hero' | 'about' | 'services' | 'portfolio' | 'testimonials'>('hero')
-  const [editingSection, setEditingSection] = useState<string | null>(null)
+  const [editingSection, setEditingSection] = useState<{ id: string; type: string } | null>(null)
 
   useEffect(() => {
-    loadSections()
-  }, [activeTab])
+    loadAllSections()
+  }, [])
 
-  const loadSections = async () => {
+  const loadAllSections = async () => {
     try {
       const supabase = createClient()
-      let data: any[] = []
+      
+      // Load all sections from all tables
+      const [heroData, aboutData, servicesData, portfolioData, testimonialsData, navItems] = await Promise.all([
+        supabase.from('hero_section').select('*').order('display_order'),
+        supabase.from('about_section').select('*').order('display_order'),
+        supabase.from('services').select('*').order('display_order'),
+        supabase.from('portfolio_items').select('*').order('display_order'),
+        supabase.from('testimonials').select('*').order('display_order'),
+        supabase.from('navigation_items').select('*').eq('enabled', true),
+      ])
 
-      switch (activeTab) {
-        case 'hero':
-          const { data: heroData } = await supabase
-            .from('hero_section')
-            .select('*')
-            .order('display_order')
-          data = heroData || []
-          break
-        case 'about':
-          const { data: aboutData } = await supabase
-            .from('about_section')
-            .select('*')
-            .order('display_order')
-          data = aboutData || []
-          break
-        case 'services':
-          const { data: servicesData } = await supabase
-            .from('services')
-            .select('*')
-            .order('display_order')
-          data = servicesData || []
-          break
-        case 'portfolio':
-          const { data: portfolioData } = await supabase
-            .from('portfolio_items')
-            .select('*')
-            .order('display_order')
-          data = portfolioData || []
-          break
-        case 'testimonials':
-          const { data: testimonialsData } = await supabase
-            .from('testimonials')
-            .select('*')
-            .order('display_order')
-          data = testimonialsData || []
-          break
+      // Combine all sections into one array
+      const allSections: UnifiedSection[] = []
+      
+      // Helper to add sections
+      const addSections = (
+        data: any[] | null,
+        type: 'hero' | 'about' | 'services' | 'portfolio' | 'testimonials',
+        tableName: string
+      ) => {
+        if (!data) return
+        data.forEach((item) => {
+          // Check if this section type is in navigation (section_id stores section type)
+          const navItem = navItems.data?.find((nav) => nav.section_id === type)
+          allSections.push({
+            id: item.id,
+            section_number: item.display_order,
+            section_name: item.section_name || item.title || type.charAt(0).toUpperCase() + type.slice(1),
+            section_type: type,
+            title: item.title || item.quote || 'Untitled',
+            enabled: item.enabled,
+            inNavigation: !!navItem,
+            display_order: item.display_order,
+            table_name: tableName,
+          })
+        })
       }
 
-      // Check navigation items
-      const { data: navItems } = await supabase
-        .from('navigation_items')
-        .select('*')
-        .eq('enabled', true)
+      addSections(heroData.data, 'hero', 'hero_section')
+      addSections(aboutData.data, 'about', 'about_section')
+      addSections(servicesData.data, 'services', 'services')
+      addSections(portfolioData.data, 'portfolio', 'portfolio_items')
+      addSections(testimonialsData.data, 'testimonials', 'testimonials')
 
-      const sectionsWithNav: Section[] = data.map((item) => ({
-        id: item.id,
-        type: activeTab,
-        title: item.title,
-        enabled: item.enabled,
-        inNavigation: navItems?.some((nav) => nav.section_id === activeTab) || false,
-        display_order: item.display_order,
-        ...item,
-      }))
+      // Sort by display_order
+      allSections.sort((a, b) => a.display_order - b.display_order)
 
-      setSections(sectionsWithNav)
+      setSections(allSections)
     } catch (error) {
       console.error('Error loading sections:', error)
     } finally {
@@ -90,84 +83,135 @@ export default function SectionsManager() {
     }
   }
 
-  const toggleNavigation = async (sectionId: string, sectionType: string) => {
+  const toggleNavigation = async (section: UnifiedSection) => {
     try {
       const supabase = createClient()
-      const section = sections.find((s) => s.id === sectionId)
-      const inNav = section?.inNavigation || false
-
-      if (inNav) {
-        // Remove from navigation
+      
+      if (section.inNavigation) {
+        // Remove from navigation - find by section_id matching the section type
         await supabase
           .from('navigation_items')
           .delete()
-          .eq('section_id', sectionType)
+          .eq('section_id', section.section_type)
       } else {
-        // Add to navigation
-        const maxOrder = sections.length > 0 ? Math.max(...sections.map((s) => s.display_order)) : 0
+        // Add to navigation - use section_name as label, section_type as section_id for scrolling
+        // Get max display_order from existing nav items
+        const { data: existingNav } = await supabase
+          .from('navigation_items')
+          .select('display_order')
+          .order('display_order', { ascending: false })
+          .limit(1)
+        
+        const maxOrder = existingNav && existingNav.length > 0 ? existingNav[0].display_order : 0
+        
         await supabase
           .from('navigation_items')
           .insert({
-            label: sectionType.charAt(0).toUpperCase() + sectionType.slice(1),
-            section_id: sectionType,
+            label: section.section_name,
+            section_id: section.section_type, // Use section type for scrolling compatibility
             enabled: true,
             display_order: maxOrder + 1,
           })
       }
 
-      loadSections()
+      loadAllSections()
     } catch (error) {
       console.error('Error toggling navigation:', error)
     }
   }
 
-  const getTableName = () => {
-    switch (activeTab) {
-      case 'hero':
-        return 'hero_section'
-      case 'about':
-        return 'about_section'
-      case 'services':
-        return 'services'
-      case 'portfolio':
-        return 'portfolio_items'
-      case 'testimonials':
-        return 'testimonials'
-      default:
-        return 'hero_section'
-    }
-  }
-
-  const toggleEnabled = async (sectionId: string) => {
+  const toggleEnabled = async (section: UnifiedSection) => {
     try {
       const supabase = createClient()
-      const section = sections.find((s) => s.id === sectionId)
 
       await supabase
-        .from(getTableName())
-        .update({ enabled: !section?.enabled })
-        .eq('id', sectionId)
+        .from(section.table_name)
+        .update({ enabled: !section.enabled })
+        .eq('id', section.id)
 
-      loadSections()
+      loadAllSections()
     } catch (error) {
       console.error('Error toggling enabled:', error)
     }
   }
 
-  const deleteSection = async (sectionId: string) => {
-    if (!confirm('Are you sure you want to delete this section?')) return
+  const deleteSection = async (section: UnifiedSection) => {
+    if (!confirm(`Are you sure you want to delete section ${section.section_number} (${section.section_name})?`)) return
 
     try {
       const supabase = createClient()
 
+      // Remove from navigation first
       await supabase
-        .from(getTableName())
+        .from('navigation_items')
         .delete()
-        .eq('id', sectionId)
+        .eq('section_id', section.section_type)
 
-      loadSections()
+      // Delete the section
+      await supabase
+        .from(section.table_name)
+        .delete()
+        .eq('id', section.id)
+
+      loadAllSections()
     } catch (error) {
       console.error('Error deleting section:', error)
+    }
+  }
+
+  const moveSection = async (section: UnifiedSection, direction: 'up' | 'down') => {
+    try {
+      const supabase = createClient()
+      const currentIndex = sections.findIndex((s) => s.id === section.id)
+      if (currentIndex === -1) return
+
+      const newIndex = direction === 'up' ? currentIndex - 1 : currentIndex + 1
+      if (newIndex < 0 || newIndex >= sections.length) return
+
+      const targetSection = sections[newIndex]
+      const currentOrder = section.display_order
+      const targetOrder = targetSection.display_order
+
+      // Swap display orders
+      await Promise.all([
+        supabase
+          .from(section.table_name)
+          .update({ display_order: targetOrder })
+          .eq('id', section.id),
+        supabase
+          .from(targetSection.table_name)
+          .update({ display_order: currentOrder })
+          .eq('id', targetSection.id),
+      ])
+
+      // Update navigation order to match section order
+      await updateNavigationOrder()
+
+      loadAllSections()
+    } catch (error) {
+      console.error('Error moving section:', error)
+    }
+  }
+
+  const updateNavigationOrder = async () => {
+    try {
+      const supabase = createClient()
+      
+      // Get all enabled sections in order
+      const enabledSections = sections
+        .filter((s) => s.enabled && s.inNavigation)
+        .sort((a, b) => a.display_order - b.display_order)
+
+      // Update navigation items to match section order
+      for (let i = 0; i < enabledSections.length; i++) {
+        const section = enabledSections[i]
+        await supabase
+          .from('navigation_items')
+          .update({ display_order: section.display_order })
+          .eq('section_id', section.section_type)
+      }
+    } catch (error) {
+      console.error('Error updating navigation order:', error)
     }
   }
 
@@ -177,96 +221,121 @@ export default function SectionsManager() {
 
   return (
     <div className="space-y-6">
-      {/* Tabs */}
-      <div className="border-b border-gray-200 dark:border-gray-700">
-        <nav className="-mb-px flex space-x-8">
-          {(['hero', 'about', 'services', 'portfolio', 'testimonials'] as const).map((tab) => (
-            <button
-              key={tab}
-              onClick={() => {
-                setActiveTab(tab)
-                setLoading(true)
-              }}
-              className={`py-4 px-1 border-b-2 font-medium text-sm ${
-                activeTab === tab
-                  ? 'border-blue-500 text-blue-600 dark:text-blue-400'
-                  : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 dark:text-gray-400 dark:hover:text-gray-300'
-              }`}
-            >
-              {tab.charAt(0).toUpperCase() + tab.slice(1)}
-            </button>
-          ))}
-        </nav>
-      </div>
-
       {/* Sections List */}
       <div className="bg-white dark:bg-gray-800 rounded-lg shadow">
         <div className="p-6">
           <div className="flex justify-between items-center mb-4">
-            <h2 className="text-xl font-semibold text-gray-900 dark:text-white">
-              {activeTab.charAt(0).toUpperCase() + activeTab.slice(1)} Sections
-            </h2>
+            <div>
+              <h2 className="text-xl font-semibold text-gray-900 dark:text-white">
+                Website Sections
+              </h2>
+              <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
+                Manage all sections. Sections are numbered by their display order. Custom names appear in navigation.
+              </p>
+            </div>
             <button
-              onClick={() => setEditingSection('new')}
+              onClick={() => {
+                // Show a dialog to select section type
+                const type = prompt('Enter section type (hero, about, services, portfolio, testimonials):')
+                if (type && ['hero', 'about', 'services', 'portfolio', 'testimonials'].includes(type)) {
+                  setEditingSection({ id: 'new', type })
+                }
+              }}
               className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
             >
-              Add New
+              Add New Section
             </button>
           </div>
 
           <div className="space-y-4">
             {sections.length === 0 ? (
               <p className="text-gray-500 dark:text-gray-400 text-center py-8">
-                No sections found. Click "Add New" to create one.
+                No sections found. Click "Add New Section" to create one.
               </p>
             ) : (
-              sections.map((section) => (
+              sections.map((section, index) => (
                 <div
                   key={section.id}
-                  className="border border-gray-200 dark:border-gray-700 rounded-lg p-4 flex items-center justify-between"
+                  className="border border-gray-200 dark:border-gray-700 rounded-lg p-4"
                 >
-                  <div className="flex-1">
-                    <h3 className="font-medium text-gray-900 dark:text-white">
-                      {section.title}
-                    </h3>
-                    <div className="flex gap-4 mt-2 text-sm text-gray-500 dark:text-gray-400">
-                      <span>Order: {section.display_order}</span>
-                      <span className={section.enabled ? 'text-green-600' : 'text-red-600'}>
-                        {section.enabled ? 'Enabled' : 'Disabled'}
-                      </span>
+                  <div className="flex items-start justify-between">
+                    <div className="flex-1">
+                      <div className="flex items-center gap-3 mb-2">
+                        <span className="text-lg font-bold text-gray-900 dark:text-white">
+                          Section {section.display_order}
+                        </span>
+                        <span className="px-2 py-1 text-xs font-medium bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded">
+                          {section.section_type}
+                        </span>
+                      </div>
+                      <h3 className="font-semibold text-gray-900 dark:text-white text-lg mb-1">
+                        {section.section_name}
+                      </h3>
+                      <p className="text-sm text-gray-500 dark:text-gray-400">
+                        {section.title}
+                      </p>
+                      <div className="flex gap-4 mt-2 text-sm text-gray-500 dark:text-gray-400">
+                        <span className={section.enabled ? 'text-green-600' : 'text-red-600'}>
+                          {section.enabled ? '✓ Enabled' : '✗ Disabled'}
+                        </span>
+                        {section.inNavigation && (
+                          <span className="text-blue-600">📍 In Navigation</span>
+                        )}
+                      </div>
                     </div>
-                  </div>
-                  <div className="flex items-center gap-4">
-                    <label className="flex items-center gap-2">
-                      <input
-                        type="checkbox"
-                        checked={section.inNavigation}
-                        onChange={() => toggleNavigation(section.id, activeTab)}
-                        className="rounded"
-                      />
-                      <span className="text-sm text-gray-700 dark:text-gray-300">In Nav</span>
-                    </label>
-                    <label className="flex items-center gap-2">
-                      <input
-                        type="checkbox"
-                        checked={section.enabled}
-                        onChange={() => toggleEnabled(section.id)}
-                        className="rounded"
-                      />
-                      <span className="text-sm text-gray-700 dark:text-gray-300">Enabled</span>
-                    </label>
-                    <button
-                      onClick={() => setEditingSection(section.id)}
-                      className="px-3 py-1 text-sm bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded hover:bg-gray-200 dark:hover:bg-gray-600"
-                    >
-                      Edit
-                    </button>
-                    <button
-                      onClick={() => deleteSection(section.id)}
-                      className="px-3 py-1 text-sm bg-red-100 dark:bg-red-900 text-red-700 dark:text-red-300 rounded hover:bg-red-200 dark:hover:bg-red-800"
-                    >
-                      Delete
-                    </button>
+                    <div className="flex items-center gap-2 ml-4">
+                      {/* Move Up/Down Buttons */}
+                      <div className="flex flex-col gap-1">
+                        <button
+                          onClick={() => moveSection(section, 'up')}
+                          disabled={index === 0}
+                          className="px-2 py-1 text-sm bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded hover:bg-gray-200 dark:hover:bg-gray-600 disabled:opacity-50 disabled:cursor-not-allowed"
+                          title="Move up"
+                        >
+                          ↑
+                        </button>
+                        <button
+                          onClick={() => moveSection(section, 'down')}
+                          disabled={index === sections.length - 1}
+                          className="px-2 py-1 text-sm bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded hover:bg-gray-200 dark:hover:bg-gray-600 disabled:opacity-50 disabled:cursor-not-allowed"
+                          title="Move down"
+                        >
+                          ↓
+                        </button>
+                      </div>
+                      <div className="flex items-center gap-4 border-l border-gray-300 dark:border-gray-600 pl-4">
+                        <label className="flex items-center gap-2">
+                          <input
+                            type="checkbox"
+                            checked={section.inNavigation}
+                            onChange={() => toggleNavigation(section)}
+                            className="rounded"
+                          />
+                          <span className="text-sm text-gray-700 dark:text-gray-300">Nav</span>
+                        </label>
+                        <label className="flex items-center gap-2">
+                          <input
+                            type="checkbox"
+                            checked={section.enabled}
+                            onChange={() => toggleEnabled(section)}
+                            className="rounded"
+                          />
+                          <span className="text-sm text-gray-700 dark:text-gray-300">Enabled</span>
+                        </label>
+                        <button
+                          onClick={() => setEditingSection({ id: section.id, type: section.section_type })}
+                          className="px-3 py-1 text-sm bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded hover:bg-gray-200 dark:hover:bg-gray-600"
+                        >
+                          Edit
+                        </button>
+                        <button
+                          onClick={() => deleteSection(section)}
+                          className="px-3 py-1 text-sm bg-red-100 dark:bg-red-900 text-red-700 dark:text-red-300 rounded hover:bg-red-200 dark:hover:bg-red-800"
+                        >
+                          Delete
+                        </button>
+                      </div>
+                    </div>
                   </div>
                 </div>
               ))
@@ -278,16 +347,14 @@ export default function SectionsManager() {
       {/* Edit Modal */}
       {editingSection && (
         <SectionEditModal
-          sectionId={editingSection}
-          sectionType={activeTab}
+          sectionId={editingSection.id}
+          sectionType={editingSection.type as 'hero' | 'about' | 'services' | 'portfolio' | 'testimonials'}
           onClose={() => {
             setEditingSection(null)
-            loadSections()
+            loadAllSections()
           }}
         />
       )}
     </div>
   )
 }
-
-
