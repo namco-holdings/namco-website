@@ -149,10 +149,11 @@ export default async function Home() {
       {aboutSection && (
         <section id="about" className="py-20 bg-white dark:bg-gray-900 scroll-mt-16 md:scroll-mt-20">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="text-center mb-16">
-              <div className="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white mb-4">
-                <MarkdownRenderer content={aboutSection.title} />
-              </div>
+            {(aboutSection.title && aboutSection.title.trim()) && (
+              <div className="text-center mb-16">
+                <div className="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white mb-4">
+                  <MarkdownRenderer content={aboutSection.title} />
+                </div>
               {aboutSection.subtitle && (
                 <div className="text-xl text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
                   <MarkdownRenderer content={aboutSection.subtitle} />
@@ -163,12 +164,12 @@ export default async function Home() {
               <div className="text-gray-600 dark:text-gray-400">
                 <MarkdownRenderer content={aboutSection.content} />
               </div>
-              <div className="bg-gray-100 dark:bg-gray-800 rounded-lg p-8 h-64 flex items-center justify-center">
+              <div className="bg-gray-100 dark:bg-gray-800 rounded-lg p-8 flex items-center justify-center">
                 {aboutSection.image_url ? (
                   <img
                     src={aboutSection.image_url}
-                    alt={aboutSection.title}
-                    className="max-w-full max-h-full object-contain"
+                    alt={aboutSection.title || 'About section image'}
+                    className="max-w-full w-full h-auto object-contain"
                   />
                 ) : (
                   <p className="text-gray-500 dark:text-gray-400">[Image Placeholder]</p>
