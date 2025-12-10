@@ -206,11 +206,11 @@ export async function getNavigationItems(): Promise<NavigationItem[]> {
     const supabase = await createClient()
     
     // Get all enabled sections from all tables, ordered by display_order
-    const [heroData, aboutData, servicesData, portfolioData, testimonialsData] = await Promise.all([
+    const [heroData, aboutData, servicesData, portfolioSectionData, testimonialsData] = await Promise.all([
       supabase.from('hero_section').select('id, section_name, display_order, enabled').eq('enabled', true).order('display_order'),
       supabase.from('about_section').select('id, section_name, display_order, enabled').eq('enabled', true).order('display_order'),
       supabase.from('services').select('id, section_name, display_order, enabled').eq('enabled', true).order('display_order'),
-      supabase.from('portfolio_items').select('id, section_name, display_order, enabled').eq('enabled', true).order('display_order'),
+      supabase.from('portfolio_section').select('id, section_name, display_order, enabled').eq('enabled', true).order('display_order'),
       supabase.from('testimonials').select('id, section_name, display_order, enabled').eq('enabled', true).order('display_order'),
     ])
 
@@ -232,7 +232,7 @@ export async function getNavigationItems(): Promise<NavigationItem[]> {
     addSections(heroData.data, 'hero')
     addSections(aboutData.data, 'about')
     addSections(servicesData.data, 'services')
-    addSections(portfolioData.data, 'portfolio')
+    addSections(portfolioSectionData.data, 'portfolio')
     addSections(testimonialsData.data, 'testimonials')
 
     // Sort by display_order
@@ -247,14 +247,27 @@ export async function getNavigationItems(): Promise<NavigationItem[]> {
     const navSectionTypes = new Set(navItems?.map((item) => item.section_id) || [])
 
     // Build navigation items from sections that are in navigation, maintaining section order
-    const navigationItems: NavigationItem[] = allSections
-      .filter((section) => navSectionTypes.has(section.type))
-      .map((section, index) => ({
-        id: `nav-${section.id}`,
+    // Group by section type to ensure only one nav item per section type
+    const sectionTypeMap = new Map<string, { id: string; section_name: string | null; display_order: number; type: string }>()
+    
+    allSections.forEach((section) => {
+      if (navSectionTypes.has(section.type)) {
+        // Only keep the first section of each type (or the one with the lowest display_order)
+        const existing = sectionTypeMap.get(section.type)
+        if (!existing || section.display_order < existing.display_order) {
+          sectionTypeMap.set(section.type, section)
+        }
+      }
+    })
+
+    const navigationItems: NavigationItem[] = Array.from(sectionTypeMap.values())
+      .sort((a, b) => a.display_order - b.display_order)
+      .map((section) => ({
+        id: `nav-${section.type}`,
         label: section.section_name || section.type,
         section_id: section.type,
         enabled: true,
-        display_order: section.display_order, // Use section's display_order
+        display_order: section.display_order,
         created_at: new Date().toISOString(),
         updated_at: new Date().toISOString(),
       }))
