@@ -70,6 +70,7 @@ export default function SectionsManager() {
       addSections(heroData.data, 'hero', 'hero_section')
       addSections(aboutData.data, 'about', 'about_section')
       addSections(servicesData.data, 'services', 'services')
+      
       // Portfolio section is special - use portfolio_section table for section settings
       if (portfolioSectionData.data && portfolioSectionData.data.length > 0) {
         portfolioSectionData.data.forEach((item) => {
@@ -79,14 +80,29 @@ export default function SectionsManager() {
             section_number: item.display_order,
             section_name: item.section_name || 'Portfolio',
             section_type: 'portfolio',
-            title: item.title || 'Portfolio',
+            title: item.title || 'Our Portfolio',
             enabled: item.enabled,
             inNavigation: !!navItem,
             display_order: item.display_order,
             table_name: 'portfolio_section',
           })
         })
+      } else if (portfolioData.data && portfolioData.data.length > 0) {
+        // Portfolio section doesn't exist but portfolio items do - show placeholder that can be created
+        const navItem = navItems.data?.find((nav) => nav.section_id === 'portfolio')
+        allSections.push({
+          id: 'portfolio-new',
+          section_number: portfolioData.data[0]?.display_order || 0,
+          section_name: 'Portfolio',
+          section_type: 'portfolio',
+          title: 'Our Portfolio',
+          enabled: true,
+          inNavigation: !!navItem,
+          display_order: portfolioData.data[0]?.display_order || 0,
+          table_name: 'portfolio_section',
+        })
       }
+      
       addSections(testimonialsData.data, 'testimonials', 'testimonials')
 
       // Sort by display_order

@@ -252,6 +252,44 @@ export interface Database {
           updated_at?: string
         }
       }
+      portfolio_section: {
+        Row: {
+          id: string
+          section_name: string | null
+          title: string
+          subtitle: string | null
+          title_color: string | null
+          subtitle_color: string | null
+          enabled: boolean
+          display_order: number
+          created_at: string
+          updated_at: string
+        }
+        Insert: {
+          id?: string
+          section_name?: string | null
+          title?: string
+          subtitle?: string | null
+          title_color?: string | null
+          subtitle_color?: string | null
+          enabled?: boolean
+          display_order?: number
+          created_at?: string
+          updated_at?: string
+        }
+        Update: {
+          id?: string
+          section_name?: string | null
+          title?: string
+          subtitle?: string | null
+          title_color?: string | null
+          subtitle_color?: string | null
+          enabled?: boolean
+          display_order?: number
+          created_at?: string
+          updated_at?: string
+        }
+      }
       portfolio_items: {
         Row: {
           id: string
