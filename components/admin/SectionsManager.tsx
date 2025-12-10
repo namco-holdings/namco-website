@@ -30,10 +30,11 @@ export default function SectionsManager() {
       const supabase = createClient()
       
       // Load all sections from all tables
-      const [heroData, aboutData, servicesData, portfolioData, testimonialsData, navItems] = await Promise.all([
+      const [heroData, aboutData, servicesData, portfolioSectionData, portfolioData, testimonialsData, navItems] = await Promise.all([
         supabase.from('hero_section').select('*').order('display_order'),
         supabase.from('about_section').select('*').order('display_order'),
         supabase.from('services').select('*').order('display_order'),
+        supabase.from('portfolio_section').select('*').order('display_order'),
         supabase.from('portfolio_items').select('*').order('display_order'),
         supabase.from('testimonials').select('*').order('display_order'),
         supabase.from('navigation_items').select('*').eq('enabled', true),
@@ -69,7 +70,23 @@ export default function SectionsManager() {
       addSections(heroData.data, 'hero', 'hero_section')
       addSections(aboutData.data, 'about', 'about_section')
       addSections(servicesData.data, 'services', 'services')
-      addSections(portfolioData.data, 'portfolio', 'portfolio_items')
+      // Portfolio section is special - use portfolio_section table for section settings
+      if (portfolioSectionData.data && portfolioSectionData.data.length > 0) {
+        portfolioSectionData.data.forEach((item) => {
+          const navItem = navItems.data?.find((nav) => nav.section_id === 'portfolio')
+          allSections.push({
+            id: item.id,
+            section_number: item.display_order,
+            section_name: item.section_name || 'Portfolio',
+            section_type: 'portfolio',
+            title: item.title || 'Portfolio',
+            enabled: item.enabled,
+            inNavigation: !!navItem,
+            display_order: item.display_order,
+            table_name: 'portfolio_section',
+          })
+        })
+      }
       addSections(testimonialsData.data, 'testimonials', 'testimonials')
 
       // Sort by display_order

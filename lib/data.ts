@@ -109,6 +109,31 @@ export async function getServices(): Promise<Service[]> {
   }
 }
 
+export async function getPortfolioSection(): Promise<{ title: string; subtitle: string | null; title_color: string | null; subtitle_color: string | null } | null> {
+  try {
+    const supabase = await createClient()
+    const { data } = await supabase
+      .from('portfolio_section')
+      .select('*')
+      .eq('enabled', true)
+      .order('display_order', { ascending: true })
+      .limit(1)
+      .single()
+
+    if (data) {
+      return {
+        title: data.title || 'Our Portfolio',
+        subtitle: data.subtitle || null,
+        title_color: data.title_color || null,
+        subtitle_color: data.subtitle_color || null,
+      }
+    }
+    return null
+  } catch {
+    return null
+  }
+}
+
 export async function getPortfolioItems(): Promise<PortfolioItem[]> {
   try {
     const supabase = await createClient()
