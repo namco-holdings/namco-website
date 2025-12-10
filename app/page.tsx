@@ -214,14 +214,14 @@ function ServicesSection({ section, services }: { section: any; services: any[] 
             </p>
           )}
         </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
           {services.map((service) => (
             <div
               key={service.id}
-              className="bg-white dark:bg-gray-900 p-8 rounded-lg shadow-md hover:shadow-xl transition-shadow"
+              className="bg-white dark:bg-gray-900 p-6 rounded-lg shadow-md hover:shadow-xl transition-shadow flex flex-col items-center text-center"
             >
               {service.icon && (
-                <div className="text-4xl mb-4">
+                <div className="mb-4 flex justify-center items-center">
                   {service.icon.startsWith('http://') || service.icon.startsWith('https://') ? (
                     // Image URL
                     <img 
@@ -232,19 +232,19 @@ function ServicesSection({ section, services }: { section: any; services: any[] 
                   ) : service.icon.startsWith('<svg') || service.icon.startsWith('data:image/svg') ? (
                     // SVG code or data URI
                     <div 
-                      className="w-16 h-16"
+                      className="w-16 h-16 flex items-center justify-center"
                       dangerouslySetInnerHTML={{ __html: service.icon }}
                     />
                   ) : (
                     // Emoji or text
-                    <span>{service.icon}</span>
+                    <span className="text-4xl">{service.icon}</span>
                   )}
                 </div>
               )}
-              <div className="text-xl font-semibold text-gray-900 dark:text-white mb-3">
+              <div className="text-lg font-semibold text-gray-900 dark:text-white mb-2">
                 <MarkdownRenderer content={service.title} />
               </div>
-              <div className="text-gray-600 dark:text-gray-400">
+              <div className="text-sm text-gray-600 dark:text-gray-400">
                 <MarkdownRenderer content={service.description} />
               </div>
             </div>
