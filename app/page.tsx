@@ -161,22 +161,19 @@ export default async function Home() {
         <section id="about" className="py-20 bg-white dark:bg-gray-900 scroll-mt-16 md:scroll-mt-20 w-full">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             {(aboutSection.title && aboutSection.title.trim()) && (
-            <div className="text-center mb-16">
-              <div className="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white mb-4">
-                <MarkdownRenderer content={aboutSection.title} />
-              </div>
-              {aboutSection.subtitle && (
-                <div className="text-xl text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
-                  <MarkdownRenderer content={aboutSection.subtitle} />
+              <div className="text-center mb-16">
+                <div className="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white mb-4">
+                  <MarkdownRenderer content={aboutSection.title} />
                 </div>
-              )}
-            </div>
+                {aboutSection.subtitle && (
+                  <div className="text-xl text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
+                    <MarkdownRenderer content={aboutSection.subtitle} />
+                  </div>
+                )}
+              </div>
             )}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
-              <div style={{ 
-                color: aboutSection.content_color || undefined,
-                fontSize: aboutSection.content_font_size || undefined
-              }}>
+              <div style={{ color: aboutSection.content_color || undefined }}>
                 <MarkdownRenderer content={aboutSection.content} />
               </div>
               <div className="bg-gray-100 dark:bg-gray-800 rounded-lg p-8 flex items-center justify-center">
