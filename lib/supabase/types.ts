@@ -112,6 +112,7 @@ export interface Database {
           background_overlay_opacity: number | null
           title_color: string | null
           subtitle_color: string | null
+          subtitle_alignment: string | null
           primary_cta_text_color: string | null
           primary_cta_bg_color: string | null
           secondary_cta_text_color: string | null
@@ -134,6 +135,7 @@ export interface Database {
           background_overlay_opacity?: number | null
           title_color?: string | null
           subtitle_color?: string | null
+          subtitle_alignment?: string | null
           primary_cta_text_color?: string | null
           primary_cta_bg_color?: string | null
           secondary_cta_text_color?: string | null
@@ -156,6 +158,7 @@ export interface Database {
           background_overlay_opacity?: number | null
           title_color?: string | null
           subtitle_color?: string | null
+          subtitle_alignment?: string | null
           primary_cta_text_color?: string | null
           primary_cta_bg_color?: string | null
           secondary_cta_text_color?: string | null
@@ -203,6 +206,10 @@ export interface Database {
           subtitle?: string | null
           content?: string
           image_url?: string | null
+          title_color?: string | null
+          subtitle_color?: string | null
+          content_color?: string | null
+          content_font_size?: string | null
           enabled?: boolean
           display_order?: number
           created_at?: string

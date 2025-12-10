@@ -43,6 +43,7 @@ export default function SectionEditModal({
           background_overlay_opacity: 0,
           title_color: '',
           subtitle_color: '',
+          subtitle_alignment: 'center',
           primary_cta_text_color: '',
           primary_cta_bg_color: '',
           secondary_cta_text_color: '',
@@ -60,6 +61,7 @@ export default function SectionEditModal({
           title_color: '',
           subtitle_color: '',
           content_color: '',
+          content_font_size: '',
           enabled: true,
           display_order: 0,
         })
@@ -262,6 +264,26 @@ export default function SectionEditModal({
                   </div>
                 </div>
               </div>
+            </div>
+
+            {/* Subtitle Alignment */}
+            <div>
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                Subtitle Alignment
+              </label>
+              <select
+                name="subtitle_alignment"
+                value={formData.subtitle_alignment || 'center'}
+                onChange={handleChange}
+                className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
+              >
+                <option value="center">Centered</option>
+                <option value="left">Left-aligned</option>
+                <option value="justify">Full Justification</option>
+              </select>
+              <p className="mt-1 text-xs text-gray-500 dark:text-gray-400">
+                Choose how the subtitle text should be aligned
+              </p>
             </div>
 
             <div className="grid grid-cols-2 gap-4">

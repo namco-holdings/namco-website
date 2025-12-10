@@ -105,8 +105,15 @@ export default async function Home() {
             </div>
             {heroSection.subtitle && (
               <div 
-                className="text-xl md:text-2xl mb-8 max-w-3xl mx-auto"
-                style={{ color: heroSection.subtitle_color || undefined }}
+                className={`text-xl md:text-2xl mb-8 max-w-3xl ${
+                  heroSection.subtitle_alignment === 'left' ? '' : 'mx-auto'
+                }`}
+                style={{ 
+                  color: heroSection.subtitle_color || undefined,
+                  textAlign: heroSection.subtitle_alignment === 'left' ? 'left' :
+                             heroSection.subtitle_alignment === 'justify' ? 'justify' :
+                             'center'
+                }}
               >
                 <MarkdownRenderer content={heroSection.subtitle} />
               </div>
@@ -173,7 +180,10 @@ export default async function Home() {
               </div>
             )}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
-              <div style={{ color: aboutSection.content_color || undefined }}>
+              <div style={{ 
+                color: aboutSection.content_color || undefined,
+                fontSize: aboutSection.content_font_size || undefined
+              }}>
                 <MarkdownRenderer content={aboutSection.content} />
               </div>
               <div className="bg-gray-100 dark:bg-gray-800 rounded-lg p-8 flex items-center justify-center">
