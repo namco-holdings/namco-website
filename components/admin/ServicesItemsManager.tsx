@@ -371,8 +371,20 @@ export default function ServicesItemsManager() {
                         <span className="text-lg font-bold text-gray-900 dark:text-white">
                           #{item.display_order}
                         </span>
-                        {item.icon && (
-                          <span className="text-2xl">{item.icon}</span>
+                        {item.icon && (item.icon.startsWith('http://') || item.icon.startsWith('https://')) && (
+                          <div className="w-8 h-8 flex items-center justify-center flex-shrink-0">
+                            <img 
+                              src={item.icon} 
+                              alt={item.title}
+                              className="w-full h-full object-contain"
+                              onError={(e) => {
+                                e.currentTarget.parentElement!.style.display = 'none'
+                              }}
+                              onLoad={(e) => {
+                                e.currentTarget.style.display = 'block'
+                              }}
+                            />
+                          </div>
                         )}
                         <span className={item.enabled ? 'text-green-600' : 'text-red-600'}>
                           {item.enabled ? '✓ Enabled' : '✗ Disabled'}
