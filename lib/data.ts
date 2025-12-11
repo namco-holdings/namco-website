@@ -279,31 +279,39 @@ export async function getAllSectionsOrdered() {
     ])
 
     // Safely extract data from results, handling both fulfilled and rejected promises
-    const heroData = results[0].status === 'fulfilled' && results[0].value ? results[0].value : { data: null, error: null }
-    const aboutData = results[1].status === 'fulfilled' && results[1].value ? results[1].value : { data: null, error: null }
-    const servicesSectionData = results[2].status === 'fulfilled' && results[2].value ? results[2].value : { data: null, error: null }
-    const portfolioSectionData = results[3].status === 'fulfilled' && results[3].value ? results[3].value : { data: null, error: null }
-    const testimonialsData = results[4].status === 'fulfilled' && results[4].value ? results[4].value : { data: null, error: null }
+    // Safely extract data, handling both fulfilled/rejected promises and Supabase errors
+    const getData = (result: PromiseSettledResult<any>) => {
+      if (result.status === 'fulfilled' && result.value && !result.value.error) {
+        return result.value
+      }
+      return { data: null, error: null }
+    }
+
+    const heroData = getData(results[0])
+    const aboutData = getData(results[1])
+    const servicesSectionData = getData(results[2])
+    const portfolioSectionData = getData(results[3])
+    const testimonialsData = getData(results[4])
 
     const allSections: Array<{ type: string; display_order: number; data: any }> = []
     
     // Hero sections - one per item
-    heroData.data?.forEach((item) => {
+    heroData.data?.forEach((item: any) => {
       allSections.push({ type: 'hero', display_order: item.display_order, data: item })
     })
     
     // About sections - one per item
-    aboutData.data?.forEach((item) => {
+    aboutData.data?.forEach((item: any) => {
       allSections.push({ type: 'about', display_order: item.display_order, data: item })
     })
     
     // Services sections - one per item
-    servicesSectionData.data?.forEach((item) => {
+    servicesSectionData.data?.forEach((item: any) => {
       allSections.push({ type: 'services', display_order: item.display_order, data: item })
     })
     
     // Portfolio sections - one per item
-    portfolioSectionData.data?.forEach((item) => {
+    portfolioSectionData.data?.forEach((item: any) => {
       allSections.push({ type: 'portfolio', display_order: item.display_order, data: item })
     })
     
@@ -341,11 +349,19 @@ export async function getNavigationItems(): Promise<NavigationItem[]> {
       supabase.from('testimonials').select('id, section_name, display_order, enabled').eq('enabled', true).order('display_order'),
     ])
 
-    const heroData = results[0].status === 'fulfilled' && results[0].value ? results[0].value : { data: null, error: null }
-    const aboutData = results[1].status === 'fulfilled' && results[1].value ? results[1].value : { data: null, error: null }
-    const servicesData = results[2].status === 'fulfilled' && results[2].value ? results[2].value : { data: null, error: null }
-    const portfolioSectionData = results[3].status === 'fulfilled' && results[3].value ? results[3].value : { data: null, error: null }
-    const testimonialsData = results[4].status === 'fulfilled' && results[4].value ? results[4].value : { data: null, error: null }
+    // Safely extract data, handling both fulfilled/rejected promises and Supabase errors
+    const getData = (result: PromiseSettledResult<any>) => {
+      if (result.status === 'fulfilled' && result.value && !result.value.error) {
+        return result.value
+      }
+      return { data: null, error: null }
+    }
+
+    const heroData = getData(results[0])
+    const aboutData = getData(results[1])
+    const servicesData = getData(results[2])
+    const portfolioSectionData = getData(results[3])
+    const testimonialsData = getData(results[4])
 
     // Combine all sections
     const allSections: Array<{ id: string; section_name: string | null; display_order: number; type: string }> = []
