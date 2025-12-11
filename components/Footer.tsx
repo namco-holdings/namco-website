@@ -24,7 +24,7 @@ export default async function Footer() {
               <MarkdownRenderer content={aboutSection?.title || siteSettings.company_name} />
             </div>
             <div className="text-sm">
-              <MarkdownRenderer content={aboutSection?.content || siteSettings.company_tagline || 'Building modern, responsive websites that make a difference.'} />
+              <MarkdownRenderer content={aboutSection?.content || siteSettings.company_tagline || 'Value for All.'} />
             </div>
           </div>
 
