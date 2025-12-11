@@ -281,8 +281,17 @@ export async function getAllSectionsOrdered() {
     // Safely extract data from results, handling both fulfilled and rejected promises
     // Safely extract data, handling both fulfilled/rejected promises and Supabase errors
     const getData = (result: PromiseSettledResult<any>) => {
-      if (result.status === 'fulfilled' && result.value && !result.value.error) {
+      if (result.status === 'fulfilled' && result.value) {
+        // If Supabase returned an error, log it but return empty data
+        if (result.value.error) {
+          console.warn('Supabase query error:', result.value.error)
+          return { data: null, error: result.value.error }
+        }
         return result.value
+      }
+      // If promise was rejected, log it
+      if (result.status === 'rejected') {
+        console.warn('Promise rejected:', result.reason)
       }
       return { data: null, error: null }
     }

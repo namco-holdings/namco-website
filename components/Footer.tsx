@@ -53,16 +53,23 @@ export default async function Footer() {
                 <MarkdownRenderer content={linksSection.title || 'Quick Links'} />
               </div>
               <ul className="space-y-2 text-sm">
-                {navItems.slice(1, 5).map((item) => (
-                  <li key={item.id}>
-                    <a
-                      href={`#${item.section_id}`}
-                      className="hover:text-white transition-colors"
-                    >
-                      {item.label}
-                    </a>
-                  </li>
-                ))}
+                {navItems
+                  .filter((item) => {
+                    // Exclude Home and Contact from footer links
+                    const label = item.label?.toLowerCase() || ''
+                    const sectionId = item.section_id?.toLowerCase() || ''
+                    return label !== 'home' && sectionId !== 'contact' && sectionId !== 'hero'
+                  })
+                  .map((item) => (
+                    <li key={item.id}>
+                      <a
+                        href={`#${item.section_id}`}
+                        className="hover:text-white transition-colors"
+                      >
+                        {item.label}
+                      </a>
+                    </li>
+                  ))}
               </ul>
             </div>
           )}

@@ -403,6 +403,18 @@ export default async function Home() {
     const portfolioItemsData = portfolioItems.status === 'fulfilled' && Array.isArray(portfolioItems.value) ? portfolioItems.value : []
     const testimonialsData = testimonials.status === 'fulfilled' && Array.isArray(testimonials.value) ? testimonials.value : []
 
+    // Log for debugging
+    if (process.env.NODE_ENV === 'development') {
+      console.log('Loaded data:', {
+        siteSettings: !!siteSettingsData,
+        orderedSections: orderedSectionsData.length,
+        servicesSection: !!servicesSectionData,
+        services: servicesData.length,
+        portfolioItems: portfolioItemsData.length,
+        testimonials: testimonialsData.length,
+      })
+    }
+
     if (!siteSettingsData) {
       console.error('Failed to load site settings')
       return <div>Error loading site settings</div>
