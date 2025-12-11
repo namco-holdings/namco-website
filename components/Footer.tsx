@@ -2,12 +2,30 @@ import { getSiteSettings, getFooterContent, getNavigationItems } from '@/lib/dat
 import MarkdownRenderer from './MarkdownRenderer'
 
 export default async function Footer() {
-  const currentYear = new Date().getFullYear()
-  const [siteSettings, footerContent, navItems] = await Promise.all([
-    getSiteSettings(),
-    getFooterContent(),
-    getNavigationItems(),
-  ])
+  try {
+    const currentYear = new Date().getFullYear()
+    const [siteSettingsResult, footerContentResult, navItemsResult] = await Promise.allSettled([
+      getSiteSettings(),
+      getFooterContent(),
+      getNavigationItems(),
+    ])
+
+    const siteSettings = siteSettingsResult.status === 'fulfilled' ? siteSettingsResult.value : null
+    const footerContent = footerContentResult.status === 'fulfilled' ? footerContentResult.value : []
+    const navItems = navItemsResult.status === 'fulfilled' ? navItemsResult.value : []
+
+    if (!siteSettings) {
+      // Return minimal footer if site settings fail
+      return (
+        <footer className="bg-gray-900 text-gray-300">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+            <div className="border-t border-gray-800 mt-8 pt-8 text-center text-sm">
+              <p>&copy; {currentYear} NAMCO. All rights reserved.</p>
+            </div>
+          </div>
+        </footer>
+      )
+    }
 
   // Organize footer content by section type
   const aboutSection = footerContent.find((f) => f.section_type === 'about')
@@ -79,5 +97,19 @@ export default async function Footer() {
         </div>
       </div>
     </footer>
-  )
+    )
+  } catch (error) {
+    console.error('Error loading footer:', error)
+    const currentYear = new Date().getFullYear()
+    // Return minimal footer on error
+    return (
+      <footer className="bg-gray-900 text-gray-300">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+          <div className="border-t border-gray-800 mt-8 pt-8 text-center text-sm">
+            <p>&copy; {currentYear} NAMCO. All rights reserved.</p>
+          </div>
+        </div>
+      </footer>
+    )
+  }
 }
