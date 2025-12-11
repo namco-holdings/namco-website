@@ -99,16 +99,10 @@ function HeroSection({ section }: { section: any }) {
             {section.primary_cta_text && (
               <a
                 href={section.primary_cta_link || '#contact'}
-                className="px-8 py-3 rounded-lg font-semibold transition-colors shadow-lg"
+                className="px-8 py-3 rounded-lg font-semibold transition-opacity shadow-lg hover:opacity-90"
                 style={{
                   backgroundColor: section.primary_cta_bg_color || 'var(--accent-color)',
                   color: section.primary_cta_text_color || '#ffffff',
-                }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.opacity = '0.9'
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.opacity = '1'
                 }}
               >
                 {section.primary_cta_text}
@@ -117,17 +111,11 @@ function HeroSection({ section }: { section: any }) {
             {section.secondary_cta_text && (
               <a
                 href={section.secondary_cta_link || '#about'}
-                className="px-8 py-3 rounded-lg font-semibold transition-colors border-2"
+                className="px-8 py-3 rounded-lg font-semibold transition-colors border-2 hover:bg-gray-50 dark:hover:bg-gray-800"
                 style={{
                   backgroundColor: section.secondary_cta_bg_color || 'var(--background-color)',
                   color: section.secondary_cta_text_color || 'var(--accent-color)',
                   borderColor: section.secondary_cta_text_color || 'var(--accent-color)',
-                }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.backgroundColor = 'rgba(0, 0, 0, 0.05)'
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.backgroundColor = section.secondary_cta_bg_color || 'var(--background-color)'
                 }}
               >
                 {section.secondary_cta_text}
@@ -409,11 +397,11 @@ export default async function Home() {
 
     // Extract values from settled promises, with fallbacks
     const siteSettingsData = siteSettings.status === 'fulfilled' ? siteSettings.value : null
-    const orderedSectionsData = orderedSections.status === 'fulfilled' ? orderedSections.value : []
+    const orderedSectionsData = orderedSections.status === 'fulfilled' && Array.isArray(orderedSections.value) ? orderedSections.value : []
     const servicesSectionData = servicesSection.status === 'fulfilled' ? servicesSection.value : null
-    const servicesData = services.status === 'fulfilled' ? services.value : []
-    const portfolioItemsData = portfolioItems.status === 'fulfilled' ? portfolioItems.value : []
-    const testimonialsData = testimonials.status === 'fulfilled' ? testimonials.value : []
+    const servicesData = services.status === 'fulfilled' && Array.isArray(services.value) ? services.value : []
+    const portfolioItemsData = portfolioItems.status === 'fulfilled' && Array.isArray(portfolioItems.value) ? portfolioItems.value : []
+    const testimonialsData = testimonials.status === 'fulfilled' && Array.isArray(testimonials.value) ? testimonials.value : []
 
     if (!siteSettingsData) {
       console.error('Failed to load site settings')
@@ -422,9 +410,13 @@ export default async function Home() {
 
     // Create a map of section types to their data for easy lookup
     const sectionMap = new Map()
-    orderedSectionsData.forEach((s) => {
-      sectionMap.set(s.type, s.data)
-    })
+    if (Array.isArray(orderedSectionsData)) {
+      orderedSectionsData.forEach((s: any) => {
+        if (s && s.type && s.data) {
+          sectionMap.set(s.type, s.data)
+        }
+      })
+    }
 
     // Get portfolio section separately since it's needed for the portfolio section component
     const portfolioSection = sectionMap.get('portfolio')
@@ -434,41 +426,45 @@ export default async function Home() {
         <Navigation />
 
         {/* Render sections in order */}
-        {orderedSectionsData.map((section) => {
-        switch (section.type) {
-          case 'hero':
-            return <HeroSection key={`hero-${section.data.id}`} section={section.data} />
-          case 'about':
-            return <AboutSection key={`about-${section.data.id}`} section={section.data} />
-          case 'services':
-            // Services section needs both the section settings and the services array
-            return (
-              <ServicesSection
-                key={`services-${section.data.id}`}
-                section={servicesSectionData}
-                services={servicesData}
-              />
-            )
-          case 'portfolio':
-            return (
-              <PortfolioSection
-                key={`portfolio-${section.data.id}`}
-                section={portfolioSection}
-                portfolioItems={portfolioItemsData}
-              />
-            )
-          case 'testimonials':
-            // Testimonials section needs the testimonials array
-            return (
-              <TestimonialsSection
-                key={`testimonials-${section.data.id}`}
-                testimonials={testimonialsData}
-              />
-            )
-          default:
+        {Array.isArray(orderedSectionsData) && orderedSectionsData.map((section: any) => {
+          if (!section || !section.type || !section.data) {
             return null
-        }
-      })}
+          }
+          
+          switch (section.type) {
+            case 'hero':
+              return <HeroSection key={`hero-${section.data.id}`} section={section.data} />
+            case 'about':
+              return <AboutSection key={`about-${section.data.id}`} section={section.data} />
+            case 'services':
+              // Services section needs both the section settings and the services array
+              return (
+                <ServicesSection
+                  key={`services-${section.data.id}`}
+                  section={servicesSectionData}
+                  services={Array.isArray(servicesData) ? servicesData : []}
+                />
+              )
+            case 'portfolio':
+              return (
+                <PortfolioSection
+                  key={`portfolio-${section.data.id}`}
+                  section={portfolioSection}
+                  portfolioItems={Array.isArray(portfolioItemsData) ? portfolioItemsData : []}
+                />
+              )
+            case 'testimonials':
+              // Testimonials section needs the testimonials array
+              return (
+                <TestimonialsSection
+                  key={`testimonials-${section.data.id}`}
+                  testimonials={Array.isArray(testimonialsData) ? testimonialsData : []}
+                />
+              )
+            default:
+              return null
+          }
+        })}
 
       {/* Contact Section - Always at the end */}
       <section id="contact" className="py-20 bg-white dark:bg-gray-900 scroll-mt-16 md:scroll-mt-20 w-full">
@@ -489,16 +485,32 @@ export default async function Home() {
       </>
     )
   } catch (error) {
+    // Log detailed error information for debugging
     console.error('Error rendering page:', error)
+    if (error instanceof Error) {
+      console.error('Error message:', error.message)
+      console.error('Error stack:', error.stack)
+    }
+    // In production, you might want to send this to an error tracking service
+    
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
           <h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">
             Error loading page
           </h1>
-          <p className="text-gray-600 dark:text-gray-400">
+          <p className="text-gray-600 dark:text-gray-400 mb-4">
             Please try refreshing the page or contact support if the problem persists.
           </p>
+          {process.env.NODE_ENV === 'development' && error instanceof Error && (
+            <div className="mt-4 p-4 bg-red-100 dark:bg-red-900 rounded text-left text-sm">
+              <p className="font-bold">Error Details (Development Only):</p>
+              <p>{error.message}</p>
+              {error.stack && (
+                <pre className="mt-2 text-xs overflow-auto">{error.stack}</pre>
+              )}
+            </div>
+          )}
         </div>
       </div>
     )
