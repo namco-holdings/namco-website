@@ -63,7 +63,7 @@ ON CONFLICT DO NOTHING;
 
 -- Default Footer Content
 INSERT INTO footer_content (section_type, title, content, enabled, display_order) VALUES
-('about', 'NAMCO', 'Value for All.', true, 0),
+('about', 'NAMCO', 'Building modern, responsive websites that make a difference.', true, 0),
 ('links', 'Quick Links', NULL, true, 1),
 ('contact', 'Contact', NULL, true, 2)
 ON CONFLICT DO NOTHING;

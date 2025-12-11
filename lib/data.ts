@@ -269,13 +269,21 @@ export async function getAllSectionsOrdered() {
   try {
     const supabase = await createClient()
     
-    const [heroData, aboutData, servicesSectionData, portfolioSectionData, testimonialsData] = await Promise.all([
+    // Use Promise.allSettled to handle cases where tables might not exist
+    const results = await Promise.allSettled([
       supabase.from('hero_section').select('*').eq('enabled', true).order('display_order'),
       supabase.from('about_section').select('*').eq('enabled', true).order('display_order'),
       supabase.from('services_section').select('*').eq('enabled', true).order('display_order'),
       supabase.from('portfolio_section').select('*').eq('enabled', true).order('display_order'),
       supabase.from('testimonials').select('*').eq('enabled', true).order('display_order'),
     ])
+
+    // Safely extract data from results, handling both fulfilled and rejected promises
+    const heroData = results[0].status === 'fulfilled' && results[0].value ? results[0].value : { data: null, error: null }
+    const aboutData = results[1].status === 'fulfilled' && results[1].value ? results[1].value : { data: null, error: null }
+    const servicesSectionData = results[2].status === 'fulfilled' && results[2].value ? results[2].value : { data: null, error: null }
+    const portfolioSectionData = results[3].status === 'fulfilled' && results[3].value ? results[3].value : { data: null, error: null }
+    const testimonialsData = results[4].status === 'fulfilled' && results[4].value ? results[4].value : { data: null, error: null }
 
     const allSections: Array<{ type: string; display_order: number; data: any }> = []
     
@@ -324,13 +332,20 @@ export async function getNavigationItems(): Promise<NavigationItem[]> {
     const supabase = await createClient()
     
     // Get all enabled sections from all tables, ordered by display_order
-    const [heroData, aboutData, servicesData, portfolioSectionData, testimonialsData] = await Promise.all([
+    // Use Promise.allSettled to handle cases where tables might not exist
+    const results = await Promise.allSettled([
       supabase.from('hero_section').select('id, section_name, display_order, enabled').eq('enabled', true).order('display_order'),
       supabase.from('about_section').select('id, section_name, display_order, enabled').eq('enabled', true).order('display_order'),
       supabase.from('services_section').select('id, section_name, display_order, enabled').eq('enabled', true).order('display_order'),
       supabase.from('portfolio_section').select('id, section_name, display_order, enabled').eq('enabled', true).order('display_order'),
       supabase.from('testimonials').select('id, section_name, display_order, enabled').eq('enabled', true).order('display_order'),
     ])
+
+    const heroData = results[0].status === 'fulfilled' && results[0].value ? results[0].value : { data: null, error: null }
+    const aboutData = results[1].status === 'fulfilled' && results[1].value ? results[1].value : { data: null, error: null }
+    const servicesData = results[2].status === 'fulfilled' && results[2].value ? results[2].value : { data: null, error: null }
+    const portfolioSectionData = results[3].status === 'fulfilled' && results[3].value ? results[3].value : { data: null, error: null }
+    const testimonialsData = results[4].status === 'fulfilled' && results[4].value ? results[4].value : { data: null, error: null }
 
     // Combine all sections
     const allSections: Array<{ id: string; section_name: string | null; display_order: number; type: string }> = []

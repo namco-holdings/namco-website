@@ -27,6 +27,10 @@ ON CONFLICT DO NOTHING;
 -- Add RLS policies
 ALTER TABLE services_section ENABLE ROW LEVEL SECURITY;
 
+-- Drop policies if they exist, then recreate them
+DROP POLICY IF EXISTS "Anyone can view enabled services sections" ON services_section;
+DROP POLICY IF EXISTS "Authenticated users can manage services sections" ON services_section;
+
 CREATE POLICY "Anyone can view enabled services sections"
   ON services_section FOR SELECT
   USING (enabled = true);

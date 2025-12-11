@@ -390,37 +390,51 @@ function TestimonialsSection({ testimonials }: { testimonials: any[] }) {
 }
 
 export default async function Home() {
-  const [
-    siteSettings,
-    orderedSections,
-    servicesSection,
-    services,
-    portfolioItems,
-    testimonials,
-  ] = await Promise.all([
-    getSiteSettings(),
-    getAllSectionsOrdered(),
-    getServicesSection(),
-    getServices(),
-    getPortfolioItems(),
-    getTestimonials(),
-  ])
+  try {
+    const [
+      siteSettings,
+      orderedSections,
+      servicesSection,
+      services,
+      portfolioItems,
+      testimonials,
+    ] = await Promise.allSettled([
+      getSiteSettings(),
+      getAllSectionsOrdered(),
+      getServicesSection(),
+      getServices(),
+      getPortfolioItems(),
+      getTestimonials(),
+    ])
 
-  // Create a map of section types to their data for easy lookup
-  const sectionMap = new Map()
-  orderedSections.forEach((s) => {
-    sectionMap.set(s.type, s.data)
-  })
+    // Extract values from settled promises, with fallbacks
+    const siteSettingsData = siteSettings.status === 'fulfilled' ? siteSettings.value : null
+    const orderedSectionsData = orderedSections.status === 'fulfilled' ? orderedSections.value : []
+    const servicesSectionData = servicesSection.status === 'fulfilled' ? servicesSection.value : null
+    const servicesData = services.status === 'fulfilled' ? services.value : []
+    const portfolioItemsData = portfolioItems.status === 'fulfilled' ? portfolioItems.value : []
+    const testimonialsData = testimonials.status === 'fulfilled' ? testimonials.value : []
 
-  // Get portfolio section separately since it's needed for the portfolio section component
-  const portfolioSection = sectionMap.get('portfolio')
+    if (!siteSettingsData) {
+      console.error('Failed to load site settings')
+      return <div>Error loading site settings</div>
+    }
 
-  return (
-    <>
-      <Navigation />
+    // Create a map of section types to their data for easy lookup
+    const sectionMap = new Map()
+    orderedSectionsData.forEach((s) => {
+      sectionMap.set(s.type, s.data)
+    })
 
-      {/* Render sections in order */}
-      {orderedSections.map((section) => {
+    // Get portfolio section separately since it's needed for the portfolio section component
+    const portfolioSection = sectionMap.get('portfolio')
+
+    return (
+      <>
+        <Navigation />
+
+        {/* Render sections in order */}
+        {orderedSectionsData.map((section) => {
         switch (section.type) {
           case 'hero':
             return <HeroSection key={`hero-${section.data.id}`} section={section.data} />
@@ -431,8 +445,8 @@ export default async function Home() {
             return (
               <ServicesSection
                 key={`services-${section.data.id}`}
-                section={servicesSection}
-                services={services}
+                section={servicesSectionData}
+                services={servicesData}
               />
             )
           case 'portfolio':
@@ -440,7 +454,7 @@ export default async function Home() {
               <PortfolioSection
                 key={`portfolio-${section.data.id}`}
                 section={portfolioSection}
-                portfolioItems={portfolioItems}
+                portfolioItems={portfolioItemsData}
               />
             )
           case 'testimonials':
@@ -448,7 +462,7 @@ export default async function Home() {
             return (
               <TestimonialsSection
                 key={`testimonials-${section.data.id}`}
-                testimonials={testimonials}
+                testimonials={testimonialsData}
               />
             )
           default:
@@ -471,7 +485,22 @@ export default async function Home() {
         </div>
       </section>
 
-      <Footer />
-    </>
-  )
+        <Footer />
+      </>
+    )
+  } catch (error) {
+    console.error('Error rendering page:', error)
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-center">
+          <h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">
+            Error loading page
+          </h1>
+          <p className="text-gray-600 dark:text-gray-400">
+            Please try refreshing the page or contact support if the problem persists.
+          </p>
+        </div>
+      </div>
+    )
+  }
 }
