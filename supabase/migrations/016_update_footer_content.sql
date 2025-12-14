@@ -10,3 +10,4 @@ INSERT INTO footer_content (section_type, title, content, enabled, display_order
 VALUES ('about', 'NAMCO', 'Value for All.', true, 0)
 ON CONFLICT DO NOTHING;
 
+

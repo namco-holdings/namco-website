@@ -130,7 +130,7 @@ function HeroSection({ section }: { section: any }) {
 
 function AboutSection({ section }: { section: any }) {
   return (
-    <section id="about" className="py-20 bg-white dark:bg-gray-900 scroll-mt-16 md:scroll-mt-20 w-full">
+    <section id="about" className="py-20 bg-white dark:bg-gray-900 scroll-mt-20 w-full">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {(section.title && section.title.trim()) && (
           <div className="text-center mb-16">
@@ -172,7 +172,7 @@ function ServicesSection({ section, services }: { section: any; services: any[] 
   if (services.length === 0) return null
   
   return (
-    <section id="services" className="py-20 bg-gray-50 dark:bg-gray-800 scroll-mt-16 md:scroll-mt-20 w-full">
+    <section id="services" className="py-20 bg-gray-50 dark:bg-gray-800 scroll-mt-20 w-full">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-16">
           {section?.title && (
@@ -244,7 +244,7 @@ function PortfolioSection({ section, portfolioItems }: { section: any; portfolio
   if (portfolioItems.length === 0) return null
   
   return (
-    <section id="portfolio" className="py-20 bg-white dark:bg-gray-900 scroll-mt-16 md:scroll-mt-20 w-full">
+    <section id="portfolio" className="py-20 bg-white dark:bg-gray-900 scroll-mt-20 w-full">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-16">
           {section?.title && (
@@ -332,7 +332,7 @@ function TestimonialsSection({ testimonials }: { testimonials: any[] }) {
   if (testimonials.length === 0) return null
   
   return (
-    <section id="testimonials" className="py-20 bg-gray-50 dark:bg-gray-800 scroll-mt-16 md:scroll-mt-20 w-full">
+    <section id="testimonials" className="py-20 bg-gray-50 dark:bg-gray-800 scroll-mt-20 w-full">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-16">
           <h2 className="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white mb-4">
@@ -479,7 +479,7 @@ export default async function Home() {
         })}
 
       {/* Contact Section - Always at the end */}
-      <section id="contact" className="py-20 bg-white dark:bg-gray-900 scroll-mt-16 md:scroll-mt-20 w-full">
+      <section id="contact" className="py-20 bg-white dark:bg-gray-900 scroll-mt-20 w-full">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
             <h2 className="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white mb-4">
